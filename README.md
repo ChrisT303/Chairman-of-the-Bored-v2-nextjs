@@ -36,9 +36,7 @@ We welcome contributions from anyone! If you'd like to contribute to the app, pl
 2. Clone your forked repo to your local machine: `git clone https://github.com/YOUR_USERNAME/REPO_NAME.git`
 3. Create a new branch for your feature or bugfix: `git checkout -b my-feature-branch`
 4. Make your changes and commit them: `git add .
-` `git commit -m "Add my feature"
-
-`
+` `git commit -m "Add my feature"`
 5. Push your changes to your forked repo: `git push origin my-feature-branch`
 6. Open a pull request on GitHub and describe your changes.
 
