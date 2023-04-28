@@ -41,13 +41,12 @@ We welcome contributions from anyone! If you'd like to contribute to the app, pl
 3. Create a new branch for your feature or bugfix:
 
 
-git checkout -b my-feature-branch
+`git checkout -b my-feature-branc`
 4. Make your changes and commit them:
 
-sql
-Copy code
-git add .
-git commit -m "Add my feature"
+
+`git add .`
+`git commit -m "Add my feature"`
 5. Push your changes to your forked repo:
 
 
