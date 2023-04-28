@@ -48,7 +48,7 @@ We welcome contributions from anyone! If you'd like to contribute to the app, pl
 
 
 ## License
-This project is licensed under the MIT License.
+![The MIT License](https://img.shields.io/badge/license-MIT-green)
 
 ## Acknowledgements
 The Chairman of the Bored app was originally created as a group project during University of Denver's Full Stack Web Devlopment Bootcamp. I am going to finish this thing because frankly, it's driving me crazy leaving it unfinshed. 
