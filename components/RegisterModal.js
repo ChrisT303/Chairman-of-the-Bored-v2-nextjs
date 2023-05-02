@@ -8,6 +8,13 @@ import { FcGoogle } from "react-icons/fc";
 import Image from "next/image";
 import StartUp from "../public/startup.png";
 
+const Error = ({ message }) => {
+    return (
+      <div className="text-red-500 text-sm">{message}</div>
+    );
+  }
+  
+
 const RegisterModal = (props) => {
   const context = useContext(AuthContext);
   const [errors, setErrors] = useState([]);
@@ -131,10 +138,10 @@ const RegisterModal = (props) => {
           </div>
         </form>
       </div>
-      {errors.map(function (error) {
-        // eslint-disable-next-line react/jsx-key
-        return <div>{error.message}</div>;
-      })}
+      {errors.map(error => (
+  <Error message={error.message} key={error.message} />
+))}
+
     </div>
   );
 };

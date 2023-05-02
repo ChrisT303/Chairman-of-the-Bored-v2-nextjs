@@ -1,15 +1,23 @@
 import { ApolloServer } from "apollo-server-micro";
 import { typeDefs, resolvers } from "../../server/schemas";
-import dbConnect from "../../server/utils/dbConnect"; 
+import dbConnect from "../../server/utils/dbConnect";
 import AuthService from "../../server/utils/auth";
 import expressPlayground from "graphql-playground-middleware-express";
+import nextConnect from 'next-connect';
 
+// Add the requestLoggerPlugin
+const requestLoggerPlugin = {
+  requestDidStart(requestContext) {
+    console.log("Request started! Query:\n", requestContext.request.query);
+    console.log("Variables:\n", requestContext.request.variables);
+  },
+};
 
 const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: ({ req }) => {
-    if (!req.headers) {
+    if (!req || !req.headers) {
       console.warn("Request has no headers, skipping context.");
       return {};
     }
@@ -18,17 +26,18 @@ const server = new ApolloServer({
       : "";
     const user = AuthService.verifyToken(token);
     return { req, user };
-  },
-});
+},
 
-const startServer = server.start();
+  plugins: [requestLoggerPlugin], // Add the plugin to the server instance
+});
 
 const playground = expressPlayground({
   endpoint: "/api/graphql",
 });
 
+const apiRoute = nextConnect();
 
-export default async function handler(req, res) {
+apiRoute.all(async function handler(req, res) {
   if (req.method === "OPTIONS") {
     res.end();
     return false;
@@ -39,21 +48,32 @@ export default async function handler(req, res) {
   }
 
   try {
-    await startServer;
     await dbConnect();
-    console.log("Server is starting up...");
+    console.log("Connecting to database...");
 
-    return server.createHandler({ path: "/api/graphql" })(req, res);
+    const { method, body } = req;
+    const response = await server.executeOperation({
+      query: body.query,
+      variables: body.variables,
+      operationName: body.operationName,
+      contextValue: { req },
+    });
+
+    return res.json(response);
   } catch (error) {
     console.error("Error in handler:", error);
     res.status(500).json({ error: "An internal server error occurred." });
   }
-}
+});
 
-
+export default apiRoute;
 
 export const config = {
   api: {
-    bodyParser: false,
+    bodyParser: true,
   },
 };
+
+
+
+

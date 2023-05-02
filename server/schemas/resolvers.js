@@ -6,6 +6,8 @@ require("dotenv").config();
 const resolvers = {
   Mutation: {
     async registerUser(_, { registerInput: { username, email, password } }) {
+        console.log("registerInput:", { username, email, password });
+
       //  see if and older user exists with email attempting to register
       console.log("registerUser");
       const previousUser = await User.findOne({ email });

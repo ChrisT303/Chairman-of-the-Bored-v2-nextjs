@@ -3,7 +3,7 @@ import {
   ApolloClient,
   InMemoryCache,
   ApolloProvider,
-  createHttpLink,
+  HttpLink,
   ApolloLink,
 } from "@apollo/client";
 import "../styles/globals.css";
@@ -12,9 +12,13 @@ import Navbar from "../components/NavBar";
 import { onError } from "@apollo/client/link/error";
 import { MemoryRouter } from "react-router-dom";
 
-const httpLink = createHttpLink({
-  uri: "/api/graphql",
+const httpLink = new HttpLink({
+  uri: '/api/graphql',
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
+
 
 const requestLogger = new ApolloLink((operation, forward) => {
   console.log('Request:', operation);
