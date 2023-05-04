@@ -11,6 +11,7 @@ import { setContext } from "@apollo/client/link/context";
 import Navbar from "../components/NavBar";
 import { onError } from "@apollo/client/link/error";
 import { MemoryRouter } from "react-router-dom";
+import { AuthProvider } from "../context/authContext"; 
 
 const httpLink = new HttpLink({
   uri: '/api/graphql',
@@ -56,10 +57,12 @@ const client = new ApolloClient({
 function MyApp({ Component, pageProps }) {
   return (
     <ApolloProvider client={client}>
-      <MemoryRouter>
-        <Navbar />
-        <Component {...pageProps} />
-      </MemoryRouter>
+      <AuthProvider> {/* Wrap your application with AuthProvider */}
+        <MemoryRouter>
+          <Navbar />
+          <Component {...pageProps} />
+        </MemoryRouter>
+      </AuthProvider>
     </ApolloProvider>
   );
 }

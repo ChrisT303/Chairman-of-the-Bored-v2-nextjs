@@ -56,27 +56,7 @@ const NavBar = () => {
               Home
             </NavLink>
           </li>
-
-          {user ? (
-            <li className="hover:text-sky-400">
-              <NavLink onClick={userLogout}>Logout</NavLink>
-            </li>
-          ) : (
-            <li className="hover:text-sky-400">
-              <NavLink onClick={() => setShowModal(true)}>Login/Signup</NavLink>
-            </li>
-          )}
-
-          <li className="hover:text-sky-400">
-            <NavLink to="/leaderboard" onClick={onClick}>
-              Leaderboard
-            </NavLink>
-          </li>
-          <li className="hover:text-sky-400">
-            <NavLink to="/about" onClick={onClick}>
-              About
-            </NavLink>
-          </li>
+          {/* ... other desktop menu items ... */}
         </ul>
 
         <div
@@ -122,7 +102,8 @@ const NavBar = () => {
         </div>
       </div>
     </div>
-  );
+);
+
 };
 
 export default NavBar;

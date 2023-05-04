@@ -24,6 +24,7 @@ const LoginModal = (props) => {
 
   const [loginUser, { loading }] = useMutation(LOGIN_USER, {
     update(proxy, { data: { loginUser: userData } }) {
+      localStorage.setItem("jwtToken", userData.token);
       context.login(userData);
       window.location.assign("/");
     },
