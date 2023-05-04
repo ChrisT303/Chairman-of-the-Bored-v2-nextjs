@@ -8,20 +8,22 @@ import LoginModal from "./LoginModal";
 import RegisterModal from "./RegisterModal";
 
 const NavBar = () => {
-  const [isLogin, setIsLogin] = useState(true);
   const [active, setActive] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
   const { user, logout } = useContext(AuthContext);
   let navigate = useNavigate();
 
+  const [authReady, setAuthReady] = useState(false);
+
   useEffect(() => {
-    setActive(false);
-  }, [user]);
+    setAuthReady(true);
+  }, []);
 
   const onClick = () => setActive(!active);
 
   const modalHandler = () => {
-    setShowModal(null);
+    setShowModal(!showModal);
   };
 
   const ModalSwitchHandler = () => {
@@ -32,6 +34,7 @@ const NavBar = () => {
     logout();
     navigate("/");
   };
+
   return (
     <div className="content-start flex flex-col h-[80px]">
       {showModal &&
@@ -53,42 +56,43 @@ const NavBar = () => {
             <FcBusinessman size={40} className="inline-flex ml-4" />
           </span>
         </div>
-        <ul className="hidden md:flex md:space-x-4 text-rose-600">
-          <li className="hover:text-sky-400">
-            <NavLink to="/" onClick={onClick} key="home">
-              Home
-            </NavLink>
-          </li>
-          {/* Add your desktop menu items here */}
-          <li className="hover:text-sky-400">
-            <NavLink
-              to="/leaderboard"
-              onClick={onClick}
-              key="desktop-leaderboard"
-            >
-              Leaderboard
-            </NavLink>
-          </li>
-          <li className="hover:text-sky-400">
-            <NavLink to="/about" onClick={onClick} key="desktop-about">
-              About
-            </NavLink>
-          </li>
-          {user ? (
+        <nav className="hidden md:flex md:space-x-4 text-rose-600">
+          <ul className="flex items-center space-x-4">
             <li className="hover:text-sky-400">
-              <NavLink onClick={userLogout} key="logout">
-                Logout
+              <NavLink to="/" onClick={onClick} key="home">
+                Home
               </NavLink>
             </li>
-          ) : (
+            {/* Add your desktop menu items here */}
             <li className="hover:text-sky-400">
-              <NavLink onClick={() => setShowModal(true)} key="login-signup">
-                Login/Signup
+              <NavLink
+                to="/leaderboard"
+                onClick={onClick}
+                key="desktop-leaderboard"
+              >
+                Leaderboard
               </NavLink>
             </li>
-          )}
-        </ul>
-
+            <li className="hover:text-sky-400">
+              <NavLink to="/about" onClick={onClick} key="desktop-about">
+                About
+              </NavLink>
+            </li>
+            {authReady && user ? (
+              <li className="hover:text-sky-400">
+                <NavLink to="/" onClick={userLogout}>
+                  Logout
+                </NavLink>
+              </li>
+            ) : (
+              <li className="hover:text-sky-400">
+                <NavLink to="/" onClick={() => setShowModal(true)}>
+                  Login/Signup
+                </NavLink>
+              </li>
+            )}
+          </ul>
+        </nav>
         <div
           onClick={onClick}
           className="md:hidden text-rose-600 hover:text-sky-400"
@@ -109,17 +113,19 @@ const NavBar = () => {
                 Home
               </NavLink>
             </li>
-            <li className="py-6 text-4xl hover:text-sky-400">
-              {user ? (
-                <NavLink onClick={userLogout} key="logout">
+            {authReady && user ? (
+              <li className="py-6 text-4xl hover:text-sky-400">
+                <NavLink to="/" onClick={userLogout}>
                   Logout
                 </NavLink>
-              ) : (
-                <NavLink onClick={() => setShowModal(true)} key="login-signup">
+              </li>
+            ) : (
+              <li className="py-6 text-4xl hover:text-sky-400">
+                <NavLink to="/" onClick={() => setShowModal(true)}>
                   Login/Signup
                 </NavLink>
-              )}
-            </li>
+              </li>
+            )}
             <li className="py-6 text-4xl hover:text-sky-400">
               <NavLink
                 to="/leaderboard"
