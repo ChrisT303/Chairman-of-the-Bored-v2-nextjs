@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
 import { HiChevronDoubleDown, HiXCircle } from "react-icons/hi";
@@ -14,6 +14,10 @@ const NavBar = () => {
   const { user, logout } = useContext(AuthContext);
   let navigate = useNavigate();
 
+  useEffect(() => {
+    setActive(false);
+  }, [user]);
+
   const onClick = () => setActive(!active);
 
   const modalHandler = () => {
@@ -28,7 +32,6 @@ const NavBar = () => {
     logout();
     navigate("/");
   };
-
   return (
     <div className="content-start flex flex-col h-[80px]">
       {showModal &&
@@ -50,13 +53,40 @@ const NavBar = () => {
             <FcBusinessman size={40} className="inline-flex ml-4" />
           </span>
         </div>
-        <ul className="hidden  md:flex md:space-x-4 text-rose-600">
+        <ul className="hidden md:flex md:space-x-4 text-rose-600">
           <li className="hover:text-sky-400">
-            <NavLink to="/" onClick={onClick}>
+            <NavLink to="/" onClick={onClick} key="home">
               Home
             </NavLink>
           </li>
-          {/* ... other desktop menu items ... */}
+          {/* Add your desktop menu items here */}
+          <li className="hover:text-sky-400">
+            <NavLink
+              to="/leaderboard"
+              onClick={onClick}
+              key="desktop-leaderboard"
+            >
+              Leaderboard
+            </NavLink>
+          </li>
+          <li className="hover:text-sky-400">
+            <NavLink to="/about" onClick={onClick} key="desktop-about">
+              About
+            </NavLink>
+          </li>
+          {user ? (
+            <li className="hover:text-sky-400">
+              <NavLink onClick={userLogout} key="logout">
+                Logout
+              </NavLink>
+            </li>
+          ) : (
+            <li className="hover:text-sky-400">
+              <NavLink onClick={() => setShowModal(true)} key="login-signup">
+                Login/Signup
+              </NavLink>
+            </li>
+          )}
         </ul>
 
         <div
@@ -75,26 +105,33 @@ const NavBar = () => {
         >
           <ul className="flex flex-col items-center">
             <li className="py-6 text-4xl hover:text-sky-400">
-              <NavLink to="/" onClick={onClick}>
+              <NavLink to="/" onClick={onClick} key="mobile-home">
                 Home
               </NavLink>
             </li>
             <li className="py-6 text-4xl hover:text-sky-400">
               {user ? (
-                <NavLink onClick={userLogout}>Logout</NavLink>
+                <NavLink onClick={userLogout} key="logout">
+                  Logout
+                </NavLink>
               ) : (
-                <NavLink onClick={() => setShowModal(true)}>
+                <NavLink onClick={() => setShowModal(true)} key="login-signup">
                   Login/Signup
                 </NavLink>
               )}
             </li>
             <li className="py-6 text-4xl hover:text-sky-400">
-              <NavLink to="/leaderboard" onClick={onClick}>
+              <NavLink
+                to="/leaderboard"
+                onClick={onClick}
+                key="mobile-leaderboard"
+              >
                 Leaderboard
               </NavLink>
             </li>
+
             <li className="py-6 text-4xl hover:text-sky-400">
-              <NavLink to="/about" onClick={onClick}>
+              <NavLink to="/about" onClick={onClick} key="mobile-about">
                 About
               </NavLink>
             </li>
@@ -102,8 +139,7 @@ const NavBar = () => {
         </div>
       </div>
     </div>
-);
-
+  );
 };
 
 export default NavBar;
