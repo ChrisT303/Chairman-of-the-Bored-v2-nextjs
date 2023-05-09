@@ -6,7 +6,7 @@ function authReducer(state, action) {
     case "LOGIN":
       return {
         ...state,
-        user: action.payload,
+        user: { id: action.payload.user_id, ...action.payload },
       };
     case "LOGOUT":
       return {
@@ -29,7 +29,7 @@ if (typeof window !== "undefined") {
     if (decodedToken.exp * 1000 < Date.now()) {
       localStorage.removeItem("jwtToken");
     } else {
-      initialState.user = decodedToken;
+      initialState.user = { id: decodedToken.user_id, ...decodedToken };
     }
   }
 }

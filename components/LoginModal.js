@@ -30,7 +30,7 @@ const LoginModal = (props) => {
     },
     onCompleted(data) {
       console.log("onCompleted");
-      window.location.assign("/");
+      window.location.assign("/profile");
     },
     onError({ graphQLErrors }) {
       setErrors(graphQLErrors);
