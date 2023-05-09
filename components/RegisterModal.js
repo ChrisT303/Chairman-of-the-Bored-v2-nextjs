@@ -126,8 +126,8 @@ const RegisterModal = (props) => {
               alt="startup image"
               width={500}
               height={500}
-              className="rounded-2xl"
-            />
+              className="hidden lg:block rounded-2xl"
+              />
             {/* Close button */}
             <div className="group absolute -top-5 right-4 md:top-4 hover:cursor-pointer hover:-translate-y-0.5 transition duration-150">
               <FaWindowClose
