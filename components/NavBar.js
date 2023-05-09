@@ -1,9 +1,8 @@
 import React, { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../context/authContext";
-import { useNavigate } from "react-router-dom";
+import Link from "next/link";
 import { HiChevronDoubleDown, HiXCircle } from "react-icons/hi";
 import { FcBusinessman } from "react-icons/fc";
-import { NavLink } from "react-router-dom";
 import LoginModal from "./LoginModal";
 import RegisterModal from "./RegisterModal";
 
@@ -12,7 +11,6 @@ const NavBar = () => {
   const [showModal, setShowModal] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
   const { user, logout } = useContext(AuthContext);
-  let navigate = useNavigate();
 
   const [authReady, setAuthReady] = useState(false);
 
@@ -32,7 +30,6 @@ const NavBar = () => {
 
   const userLogout = () => {
     logout();
-    navigate("/");
   };
 
   return (
@@ -59,36 +56,21 @@ const NavBar = () => {
         <nav className="hidden md:flex md:space-x-4 text-rose-600">
           <ul className="flex items-center space-x-4">
             <li className="hover:text-sky-400">
-              <NavLink to="/" onClick={onClick} key="home">
-                Home
-              </NavLink>
-            </li>
-            {/* Add your desktop menu items here */}
-            <li className="hover:text-sky-400">
-              <NavLink
-                to="/leaderboard"
-                onClick={onClick}
-                key="desktop-leaderboard"
-              >
-                Leaderboard
-              </NavLink>
+            <Link href="/"><span className="cursor-pointer">Home</span></Link>
             </li>
             <li className="hover:text-sky-400">
-              <NavLink to="/about" onClick={onClick} key="desktop-about">
-                About
-              </NavLink>
+            <Link href="/leaderboard"><span className="cursor-pointer">Leaderboard</span></Link>
+            </li>
+            <li className="hover:text-sky-400">
+            <Link href="/about"><span className="cursor-pointer">About</span></Link>
             </li>
             {authReady && user ? (
               <li className="hover:text-sky-400">
-                <NavLink to="/" onClick={userLogout}>
-                  Logout
-                </NavLink>
+                <a onClick={userLogout}>Logout</a>
               </li>
             ) : (
               <li className="hover:text-sky-400">
-                <NavLink to="/" onClick={() => setShowModal(true)}>
-                  Login/Signup
-                </NavLink>
+                <a onClick={() => setShowModal(true)}>Login/Signup</a>
               </li>
             )}
           </ul>
@@ -109,43 +91,32 @@ const NavBar = () => {
         >
           <ul className="flex flex-col items-center">
             <li className="py-6 text-4xl hover:text-sky-400">
-              <NavLink to="/" onClick={onClick} key="mobile-home">
-                Home
-              </NavLink>
+            <Link href="/"><span className="cursor-pointer">Home</span></Link>
             </li>
             {authReady && user ? (
               <li className="py-6 text-4xl hover:text-sky-400">
-                <NavLink to="/" onClick={userLogout}>
-                  Logout
-                </NavLink>
+                <a onClick={userLogout}>Logout</a>
               </li>
             ) : (
               <li className="py-6 text-4xl hover:text-sky-400">
-                <NavLink to="/" onClick={() => setShowModal(true)}>
-                  Login/Signup
-                </NavLink>
+                <a onClick={() => setShowModal(true)}>Login/Signup</a>
               </li>
             )}
             <li className="py-6 text-4xl hover:text-sky-400">
-              <NavLink
-                to="/leaderboard"
-                onClick={onClick}
-                key="mobile-leaderboard"
-              >
-                Leaderboard
-              </NavLink>
+            <Link href="/leaderboard"><span className="cursor-pointer">Leaderboard</span></Link>
             </li>
-
             <li className="py-6 text-4xl hover:text-sky-400">
-              <NavLink to="/about" onClick={onClick} key="mobile-about">
-                About
-              </NavLink>
+            <Link href="/about"><span className="cursor-pointer">About</span></Link>
             </li>
           </ul>
         </div>
       </div>
     </div>
   );
+
 };
 
 export default NavBar;
+
+
+

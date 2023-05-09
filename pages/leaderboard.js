@@ -1,8 +1,9 @@
+// pages/leaderboard.js
 import React from "react";
 
 import LeaderBoard from "../components/LeaderBoard";
 
-const LeaderBoardPage = () => {
+const Leaderboard = () => {
   return (
     <div className="flex flex-col bg-leaderboard bg-cover bg-center h-screen p-8">
       <LeaderBoard />
@@ -10,4 +11,4 @@ const LeaderBoardPage = () => {
   );
 };
 
-export default LeaderBoardPage;
+export default Leaderboard;

@@ -1,4 +1,5 @@
-import Head from 'next/head';
+import Head from "next/head";
+import HomePage from "./homepage";
 
 export default function Index() {
   return (
@@ -8,7 +9,9 @@ export default function Index() {
         <meta name="description" content="Chairman of the Bored" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <HomePage />
     </>
   );
 }
+
 

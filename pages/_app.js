@@ -7,22 +7,22 @@ import {
   ApolloLink,
 } from "@apollo/client";
 import "../styles/globals.css";
+import "tailwindcss/tailwind.css";
 import { setContext } from "@apollo/client/link/context";
 import Navbar from "../components/NavBar";
 import { onError } from "@apollo/client/link/error";
-import { MemoryRouter } from "react-router-dom";
-import { AuthProvider } from "../context/authContext"; 
+import { AuthProvider } from "../context/authContext";
+import { useRouter } from "next/router";
 
 const httpLink = new HttpLink({
-  uri: '/api/graphql',
+  uri: "/api/graphql",
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
-
 const requestLogger = new ApolloLink((operation, forward) => {
-  console.log('Request:', operation);
+  console.log("Request:", operation);
   return forward(operation);
 });
 
@@ -55,13 +55,29 @@ const client = new ApolloClient({
 });
 
 function MyApp({ Component, pageProps }) {
+  const router = useRouter();
+
+  const pageBackground = () => {
+    const route = router.pathname;
+    if (route === "/") {
+      return "bg-girl bg-no-repeat bg-cover min-h-screen";
+    } else if (route === "/leaderboard") {
+      return "bg-leaderboard min-h-screen";
+    } else if (route === "/about") {
+      return "bg-about min-h-screen";
+    } else {
+      return "min-h-screen";
+    }
+  };
+  
+
   return (
     <ApolloProvider client={client}>
-      <AuthProvider> {/* Wrap your application with AuthProvider */}
-        <MemoryRouter>
-          <Navbar />
+      <AuthProvider>
+        <Navbar />
+        <div className={`${pageBackground()} min-h-screen`}>
           <Component {...pageProps} />
-        </MemoryRouter>
+        </div>
       </AuthProvider>
     </ApolloProvider>
   );
