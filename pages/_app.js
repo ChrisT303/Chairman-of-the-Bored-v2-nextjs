@@ -28,15 +28,21 @@ const requestLogger = new ApolloLink((operation, forward) => {
 
 const authLink = setContext((_, { headers }) => {
   const token =
-    typeof window !== "undefined" ? localStorage.getItem("id_token") : null;
+    typeof window !== "undefined" ? localStorage.getItem("jwtToken") : null;
   const authorization = token ? `Bearer ${token}` : "";
+  
+  const newHeaders = {
+    ...(headers || {}),
+    authorization,
+  };
+  
+  console.log('Headers:', newHeaders);
+  
   return {
-    headers: {
-      ...(headers || {}),
-      authorization,
-    },
+    headers: newHeaders,
   };
 });
+
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors)

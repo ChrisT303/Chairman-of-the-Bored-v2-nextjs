@@ -21,30 +21,31 @@ const Profile = () => {
     e.preventDefault();
     setSuccessMessage("");
     setErrorMessage("");
-
+  
     if (!userId) {
       setErrorMessage("User not authenticated.");
       return;
     }
-
+  
     try {
       const { data } = await updateUserPreferences({
         variables: {
           preferenceInput: {
             id: userId,
             interest,
-            age,
+            age: parseInt(age), // Convert age to an integer
             location,
             skillLevel,
           },
         },
       });
-
+  
       setSuccessMessage("Preferences updated successfully.");
     } catch (err) {
       setErrorMessage("Error updating preferences. Please try again.");
     }
   };
+  
 
   return (
     <div className="container mx-auto p-4">

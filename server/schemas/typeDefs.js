@@ -54,11 +54,13 @@ const typeDefs = gql`
   }
 
   input UserPreferenceInput {
+    id: ID!
     interest: String
     age: Int
     location: String
     skillLevel: String
   }
+  
   
   type UpdateUserPreferencesPayload {
     successMessage: String

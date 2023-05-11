@@ -16,7 +16,7 @@ const requestLoggerPlugin = {
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: ({ req }) => {
+  context: async ({ req }) => {
     if (!req || !req.headers) {
       console.warn("Request has no headers, skipping context.");
       return {};
@@ -24,12 +24,13 @@ const server = new ApolloServer({
     const token = req.headers.authorization
       ? req.headers.authorization.split(" ").pop()
       : "";
-    const user = AuthService.verifyToken(token);
+    const user = await AuthService.verifyToken(token);
     return { req, user };
-},
-
+  },
+  
   plugins: [requestLoggerPlugin], // Add the plugin to the server instance
 });
+
 
 const playground = expressPlayground({
   endpoint: "/api/graphql",
@@ -56,8 +57,12 @@ apiRoute.all(async function handler(req, res) {
       query: body.query,
       variables: body.variables,
       operationName: body.operationName,
-      contextValue: { req },
+      context: { req },
     });
+    
+    
+    
+    
 
     return res.json(response);
   } catch (error) {

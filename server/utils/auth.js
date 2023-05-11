@@ -26,21 +26,21 @@ class AuthService {
 
   getToken() {
     if (typeof window !== "undefined") {
-      return localStorage.getItem("id_token");
+      return localStorage.getItem("jwtToken");
     }
     return null;
   }
 
   login(idToken) {
     if (typeof window !== "undefined") {
-      localStorage.setItem("id_token", idToken);
+      localStorage.setItem("jwtToken", idToken);
       window.location.assign("/");
     }
   }
 
   logout() {
     if (typeof window !== "undefined") {
-      localStorage.removeItem("id_token");
+      localStorage.removeItem("jwtToken");
       window.location.assign("/");
     }
   }
