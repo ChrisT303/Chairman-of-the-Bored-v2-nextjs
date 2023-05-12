@@ -24,9 +24,12 @@ const server = new ApolloServer({
     const token = req.headers.authorization
       ? req.headers.authorization.split(" ").pop()
       : "";
+    console.log('Token from headers:', token);
     const user = await AuthService.verifyToken(token);
+    console.log('User from token:', user);
     return { req, user };
   },
+  
   
   plugins: [requestLoggerPlugin], // Add the plugin to the server instance
 });
@@ -78,7 +81,3 @@ export const config = {
     bodyParser: true,
   },
 };
-
-
-
-

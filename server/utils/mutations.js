@@ -21,15 +21,12 @@ export const REGISTER_USER = gql`
 `;
 
 export const UPDATE_USER_PREFERENCES = gql`
-  mutation UpdateUserPreferences(
-    $preferenceInput: UserPreferenceInput!
-  ) {
-    updateUserPreferences(
-      preferenceInput: $preferenceInput
-    ) {
+  mutation UpdateUserPreferences($preferenceInput: UserPreferenceInput!) {
+    updateUserPreferences(preferenceInput: $preferenceInput) {
       successMessage
       errorMessage
     }
   }
 `;
+
 

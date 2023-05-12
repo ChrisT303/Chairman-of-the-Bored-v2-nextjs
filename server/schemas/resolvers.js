@@ -1,9 +1,22 @@
-const UserModel = require('../models/User');
+const UserModel = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const resolvers = {
+  Query: {
+    user: async (_, { ID }) => await UserModel.findById(ID),
+    users: async () => await UserModel.find(),
+    authenticatedUser: async (_, __, context) => {
+      const { user } = context;
+
+      if (!user) {
+        throw new Error("Authentication required to fetch authenticated user");
+      }
+
+      return await UserModel.findById(user._id);
+    },
+  },
   Mutation: {
     async registerUser(_, { registerInput: { username, email, password } }) {
       console.log("registerInput:", { username, email, password });
@@ -13,7 +26,7 @@ const resolvers = {
       const user = await UserModel.findOne({ email });
 
       // Throw error if that user exists
-      if (previousUser) {
+      if (user) {
         throw new Error(
           "A user with this email already exists" + email,
           "User_Already_Exists"
@@ -73,34 +86,33 @@ const resolvers = {
           ...res._doc,
         };
       } else {
-        throw new Error(
-          "Invalid login credentials",
-          "INVALID_CREDENTIALS"
-        );
+        throw new Error("Invalid login credentials", "INVALID_CREDENTIALS");
       }
     },
-    async updateUserPreferences(_, { preferences }, context) {
-        console.log("Context in updateUserPreferences:", context); // Add this line
-        const { user } = context;
-      
-        if (!user) {
-          throw new Error("Authentication required to update user preferences");
-        }
-      
-        try {
-          const updatedUser = await UserModel.findByIdAndUpdate(
-            user._id,
-            { preferences },
-            { new: true }
-          );
-      
-          return updatedUser;
-        } catch (err) {
-          console.log("Error updating user preferences: ", err);
-          throw new Error("Error updating user preferences");
-        }
-      },
-      
+    async updateUserPreferences(_, { preferenceInput }, context) {
+      console.log("Context in updateUserPreferences:", context); // Add this line
+      const { user } = context;
+
+      if (!user) {
+        throw new Error("Authentication required to update user preferences");
+      }
+
+      try {
+        const updatedUser = await UserModel.findByIdAndUpdate(
+          user._id,
+          { preferences: preferenceInput },
+          { new: true }
+        );
+
+        return {
+          successMessage: "User preferences updated successfully",
+          errorMessage: "",
+        };
+      } catch (err) {
+        console.log("Error updating user preferences: ", err);
+        throw new Error("Error updating user preferences");
+      }
+    },
   },
   //   this is connected to the User.js mongoose model, get user by id
   Query: {

@@ -45,6 +45,13 @@ const typeDefs = gql`
     user(id: ID!): User
   }
 
+
+  type Query {
+    users: [User]
+    user(id: ID!): User
+    authenticatedUser: User 
+  }
+
   type Mutation {
     registerUser(registerInput: RegisterInput): User
     loginUser(loginInput: LoginInput!): User
