@@ -3,7 +3,7 @@ import { typeDefs, resolvers } from "../../server/schemas";
 import dbConnect from "../../server/utils/dbConnect";
 import AuthService from "../../server/utils/auth";
 import expressPlayground from "graphql-playground-middleware-express";
-import nextConnect from 'next-connect';
+import nextConnect from "next-connect";
 
 // Add the requestLoggerPlugin
 const requestLoggerPlugin = {
@@ -17,6 +17,7 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: async ({ req }) => {
+    console.log("Creating context with request:", req);
     if (!req || !req.headers) {
       console.warn("Request has no headers, skipping context.");
       return {};
@@ -24,13 +25,10 @@ const server = new ApolloServer({
     const token = req.headers.authorization
       ? req.headers.authorization.split(" ").pop()
       : "";
-    console.log('Token from headers:', token);
     const user = await AuthService.verifyToken(token);
-    console.log('User from token:', user);
+    console.log("Created context:", { req, user });
     return { req, user };
   },
-  
-  
   plugins: [requestLoggerPlugin], // Add the plugin to the server instance
 });
 
@@ -51,21 +49,25 @@ apiRoute.all(async function handler(req, res) {
     return playground(req, res);
   }
 
+  console.log("Incoming request:", req.method);
+  console.log("Request headers:", req.headers);
+
   try {
     await dbConnect();
     console.log("Connecting to database...");
 
     const { method, body } = req;
+    console.log("Executing operation:", body.query);
+
     const response = await server.executeOperation({
       query: body.query,
       variables: body.variables,
       operationName: body.operationName,
-      context: { req },
+      context: async () => ({ req }),
     });
     
-    
-    
-    
+
+    console.log("Operation response:", response);
 
     return res.json(response);
   } catch (error) {
@@ -73,6 +75,7 @@ apiRoute.all(async function handler(req, res) {
     res.status(500).json({ error: "An internal server error occurred." });
   }
 });
+
 
 export default apiRoute;
 

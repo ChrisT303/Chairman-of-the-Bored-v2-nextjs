@@ -49,21 +49,19 @@ class AuthService {
     return token;
   }
   verifyToken(token) {
+    console.log("Verifying token:", token);
     if (!token) {
-      console.log('No token provided');
       return null;
     }
     try {
       const decoded = jwt.verify(token, JWT_SECRET);
-      console.log('Decoded token:', decoded);
+      console.log("Decoded token:", decoded);
       return decoded.data;
     } catch (err) {
-      console.log('Error decoding token:', err);
+      console.log(err);
       return null;
     }
   }
-  
-  
 }
 
 const authService = new AuthService();
