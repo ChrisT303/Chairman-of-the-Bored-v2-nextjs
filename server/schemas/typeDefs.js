@@ -57,7 +57,6 @@ const typeDefs = gql`
     loginUser(loginInput: LoginInput!): User
     saveTask(input: SavedTaskInput!): User
     removeTask(key: String!): User
-    updateUserPreferences(preferenceInput: UserPreferenceInput!): UpdateUserPreferencesPayload!
   }
 
   input UserPreferenceInput {
@@ -69,10 +68,7 @@ const typeDefs = gql`
   }
   
   
-  type UpdateUserPreferencesPayload {
-    successMessage: String
-    errorMessage: String
-  }
+ 
 `;
 
 module.exports = typeDefs;

@@ -89,30 +89,7 @@ const resolvers = {
         throw new Error("Invalid login credentials", "INVALID_CREDENTIALS");
       }
     },
-    async updateUserPreferences(_, { preferenceInput }, context) {
-      console.log("Context in updateUserPreferences:", context); // Add this line
-      const { user } = context;
 
-      if (!user) {
-        throw new Error("Authentication required to update user preferences");
-      }
-
-      try {
-        const updatedUser = await UserModel.findByIdAndUpdate(
-          user._id,
-          { preferences: preferenceInput },
-          { new: true }
-        );
-
-        return {
-          successMessage: "User preferences updated successfully",
-          errorMessage: "",
-        };
-      } catch (err) {
-        console.log("Error updating user preferences: ", err);
-        throw new Error("Error updating user preferences");
-      }
-    },
   },
   //   this is connected to the User.js mongoose model, get user by id
   Query: {

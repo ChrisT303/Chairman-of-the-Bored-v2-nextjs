@@ -15,7 +15,7 @@ const Profile = () => {
   const { user, loading } = useContext(AuthContext);
   const userId = user?.id;
 
-  const [updateUserPreferences] = useMutation(UPDATE_USER_PREFERENCES);
+  // const [updateUserPreferences] = useMutation(UPDATE_USER_PREFERENCES);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
