@@ -5,7 +5,6 @@ import AuthService from "../../server/utils/auth";
 import expressPlayground from "graphql-playground-middleware-express";
 import nextConnect from "next-connect";
 
-// Add the requestLoggerPlugin
 const requestLoggerPlugin = {
   requestDidStart(requestContext) {
     console.log("Request started! Query:\n", requestContext.request.query);

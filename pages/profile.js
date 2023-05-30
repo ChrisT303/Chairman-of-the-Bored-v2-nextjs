@@ -13,44 +13,16 @@ const Profile = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   const { user, loading } = useContext(AuthContext);
-  const userId = user?.id;
 
-  // const [updateUserPreferences] = useMutation(UPDATE_USER_PREFERENCES);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSuccessMessage("");
-    setErrorMessage("");
-  
-    if (!userId) {
-      setErrorMessage("User not authenticated.");
-      return;
-    }
-  
-    try {
-      const { data } = await updateUserPreferences({
-        variables: {
-          preferenceInput: {
-            id: userId,
-            interest,
-            age: parseInt(age), // Convert age to an integer
-            location,
-            skillLevel,
-          },
-        },
-      });
-  
-      setSuccessMessage("Preferences updated successfully.");
-    } catch (err) {
-      setErrorMessage("Error updating preferences. Please try again.");
-    }
-  };
+
+ 
   
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl mb-4">Edit Profile</h1>
-      <form onSubmit={handleSubmit}>
+      <form >
         <div className="mb-4">
           <label className="block mb-2">Interest</label>
           <input
