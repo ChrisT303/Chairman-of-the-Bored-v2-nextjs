@@ -16,15 +16,48 @@ const Profile = () => {
 
   const { user, loading } = useContext(AuthContext);
 
+  const [updateUserPreferences, { loading: updateLoading }] = useMutation(UPDATE_USER_PREFERENCES, {
+    onCompleted: data => {
+      setSuccessMessage('Profile updated successfully');
+    },
+    onError: error => {
+      setErrorMessage(error.message);
+    }
+  });
+  
 
-
- 
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const userId = user.id;
+  
+    let ageInput = parseInt(age);
+  
+    if (isNaN(ageInput)) {
+      setErrorMessage('Age must be a valid number');
+      return;
+    }
+  
+    await updateUserPreferences({
+      variables: {
+        userPreferenceInput: {
+          id: userId,
+          interest,
+          age: ageInput,
+          location,
+          skillLevel
+        }
+      }
+    });
+  };
+  
+  
+  
   
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl mb-4">Edit Profile</h1>
-      <form >
+      <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label className="block mb-2">Interest</label>
           <input

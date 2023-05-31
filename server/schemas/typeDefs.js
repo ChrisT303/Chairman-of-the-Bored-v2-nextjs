@@ -7,6 +7,10 @@ const typeDefs = gql`
     email: String
     password: String
     token: String
+    interest: String
+    age: Int
+    location: String
+    skillLevel: String
   }
 
   input RegisterInput {
@@ -40,11 +44,13 @@ const typeDefs = gql`
     accessibility: Float
   }
 
-  type Query {
-    users: [User]
-    user(id: ID!): User
+  input UserPreferenceInput {
+    id: ID!
+    interest: String
+    age: Int
+    location: String
+    skillLevel: String
   }
-
 
   type Query {
     users: [User]
@@ -57,18 +63,9 @@ const typeDefs = gql`
     loginUser(loginInput: LoginInput!): User
     saveTask(input: SavedTaskInput!): User
     removeTask(key: String!): User
+    updateUserPreferences(input: UserPreferenceInput!): User
   }
-
-  input UserPreferenceInput {
-    id: ID!
-    interest: String
-    age: Int
-    location: String
-    skillLevel: String
-  }
-  
-  
- 
 `;
 
 module.exports = typeDefs;
+

@@ -21,11 +21,8 @@ const resolvers = {
     async registerUser(_, { registerInput: { username, email, password } }) {
       console.log("registerInput:", { username, email, password });
 
-      //  see if and older user exists with email attempting to register
-      console.log("registerUser");
       const user = await UserModel.findOne({ email });
 
-      // Throw error if that user exists
       if (user) {
         throw new Error(
           "A user with this email already exists" + email,
@@ -33,17 +30,14 @@ const resolvers = {
         );
       }
 
-      // encrypt password
       var encryptedPassword = await bcrypt.hash(password, 10);
 
-      // build out mongoose model(user)
       const newUser = new UserModel({
         username: username,
         email: email.toLowerCase(),
         password: encryptedPassword,
       });
 
-      // create JWT token (attach to out user model) the user model in User.js
       const token = jwt.sign(
         { user_id: newUser._id, email },
         process.env.JWT_SECRET,
@@ -51,9 +45,9 @@ const resolvers = {
           expiresIn: "2h",
         }
       );
-      //   attach to user model
+
       newUser.token = token;
-      // Save our user in mongodb
+
       const res = await newUser.save();
       return {
         id: res.id,
@@ -61,14 +55,10 @@ const resolvers = {
       };
     },
     async loginUser(_, { loginInput: { email, password } }) {
-      //    see if user exists with the email
-
       const user = await UserModel.findOne({ email });
       console.log(user);
-      // check if password matches encrypted password
-      // create JWT token (attach to out user model) the user model in User.js
+
       if (user && (await bcrypt.compare(password, user.password))) {
-        // create a new JWT token
         console.log("passwords match");
         const token = jwt.sign(
           { user_id: user._id, email },
@@ -77,9 +67,9 @@ const resolvers = {
             expiresIn: "2h",
           }
         );
-        // token already exists,
+        
         user.token = token;
-        // Save out user in mongodb
+
         const res = await user;
         return {
           id: res.id,
@@ -89,13 +79,25 @@ const resolvers = {
         throw new Error("Invalid login credentials", "INVALID_CREDENTIALS");
       }
     },
+    async updateUserPreferences(_, { input }) {
+      const { id, interest, age, location, skillLevel } = input;
 
-  },
-  //   this is connected to the User.js mongoose model, get user by id
-  Query: {
-    user: async (_, { ID }) => await UserModel.findById(ID),
-    users: async () => await UserModel.find(),
+      const user = await UserModel.findById(id);
+      if (!user) {
+        throw new Error('User not found');
+      }
+
+      user.interest = interest || user.interest;
+      user.age = age || user.age;
+      user.location = location || user.location;
+      user.skillLevel = skillLevel || user.skillLevel;
+
+      await user.save();
+
+      return user;
+    },
   },
 };
 
 module.exports = resolvers;
+

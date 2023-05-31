@@ -17,10 +17,21 @@ export const REGISTER_USER = gql`
       username
       token
     }
-  }
+  } 
 `;
 
 
+export const UPDATE_USER_PREFERENCES = gql`
+  mutation UpdateUserPreferences($userPreferenceInput: UserPreferenceInput!) {
+    updateUserPreferences(input: $userPreferenceInput) {
+      id
+      interest
+      age
+      location
+      skillLevel
+    }
+  }
+`;
 
 
 
