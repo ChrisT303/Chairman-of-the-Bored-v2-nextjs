@@ -12,7 +12,6 @@ const NavBar = () => {
   const [isLogin, setIsLogin] = useState(true);
   const { user, logout } = useContext(AuthContext);
 
-
   const [authReady, setAuthReady] = useState(false);
 
   useEffect(() => {
@@ -57,30 +56,36 @@ const NavBar = () => {
         <nav className="hidden md:flex md:space-x-4 text-rose-600">
           <ul className="flex items-center space-x-4">
             <li className="hover:text-sky-400">
-            <Link href="/"><span className="cursor-pointer">Home</span></Link>
+              <Link href="/">
+                <span className="cursor-pointer">Home</span>
+              </Link>
             </li>
             <li className="hover:text-sky-400">
-            <Link href="/leaderboard"><span className="cursor-pointer">Leaderboard</span></Link>
+              <Link href="/leaderboard">
+                <span className="cursor-pointer">Leaderboard</span>
+              </Link>
             </li>
             <li className="hover:text-sky-400">
-            <Link href="/about"><span className="cursor-pointer">About</span></Link>
+              <Link href="/about">
+                <span className="cursor-pointer">About</span>
+              </Link>
             </li>
             {authReady && user ? (
-            <>
+              <>
+                <li className="hover:text-sky-400">
+                  <Link href="/profile">
+                    <span>Profile</span>
+                  </Link>
+                </li>
+                <li className="hover:text-sky-400">
+                  <a onClick={userLogout}>Logout</a>
+                </li>
+              </>
+            ) : (
               <li className="hover:text-sky-400">
-                <Link href="/profile">
-                  <span>Profile</span>
-                </Link>
+                <a onClick={() => setShowModal(true)}>Login/Signup</a>
               </li>
-              <li className="hover:text-sky-400">
-                <a onClick={userLogout}>Logout</a>
-              </li>
-            </>
-          ) : (
-            <li className="hover:text-sky-400">
-              <a onClick={() => setShowModal(true)}>Login/Signup</a>
-            </li>
-          )}
+            )}
           </ul>
         </nav>
         <div
@@ -97,48 +102,43 @@ const NavBar = () => {
               : "w-full h-screen main flex flex-col md:hidden justify-center items-center bg-girl bg-cover bg-no-repeat bg-center md:bg-none text-black absolute inset-0 z-30"
           }
         >
-      <ul className="flex flex-col items-center">
-  <li className="py-6 text-4xl hover:text-sky-400" onClick={onClick}>
-    <Link href="/">
-      <span className="cursor-pointer">Home</span>
-    </Link>
-  </li>
-  {authReady && user ? (
-            <>
-              <li className="hover:text-sky-400">
-                <Link href="/profile">
-                  <span>Profile</span>
-                </Link>
-              </li>
-              <li className="hover:text-sky-400">
-                <a onClick={userLogout}>Logout</a>
-              </li>
-            </>
-          ) : (
-            <li className="hover:text-sky-400">
-              <a onClick={() => setShowModal(true)}>Login/Signup</a>
+          <ul className="flex flex-col items-center">
+            <li className="py-6 text-4xl hover:text-sky-400" onClick={onClick}>
+              <Link href="/">
+                <span className="cursor-pointer">Home</span>
+              </Link>
             </li>
-          )}
-  <li className="py-6 text-4xl hover:text-sky-400" onClick={onClick}>
-    <Link href="/leaderboard">
-      <span className="cursor-pointer">Leaderboard</span>
-    </Link>
-  </li>
-  <li className="py-6 text-4xl hover:text-sky-400" onClick={onClick}>
-    <Link href="/about">
-      <span className="cursor-pointer">About</span>
-    </Link>
-  </li>
-</ul>
-
+            {authReady && user ? (
+              <>
+                <li className="py-6 text-4xl hover:text-sky-400">
+                  <Link href="/profile">
+                    <span>Profile</span>
+                  </Link>
+                </li>
+                <li className="py-6 text-4xl hover:text-sky-400">
+                  <a onClick={userLogout}>Logout</a>
+                </li>
+              </>
+            ) : (
+              <li className="py-6 text-4xl hover:text-sky-400">
+                <a onClick={() => setShowModal(true)}>Login/Signup</a>
+              </li>
+            )}
+            <li className="py-6 text-4xl hover:text-sky-400" onClick={onClick}>
+              <Link href="/leaderboard">
+                <span className="cursor-pointer">Leaderboard</span>
+              </Link>
+            </li>
+            <li className="py-6 text-4xl hover:text-sky-400" onClick={onClick}>
+              <Link href="/about">
+                <span className="cursor-pointer">About</span>
+              </Link>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
   );
-
 };
 
 export default NavBar;
-
-
-
