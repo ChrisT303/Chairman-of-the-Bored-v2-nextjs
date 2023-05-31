@@ -2,6 +2,8 @@ import React, { useState, useContext } from "react";
 import { useMutation } from "@apollo/react-hooks";
 import { AuthContext } from "../context/authContext";
 import { UPDATE_USER_PREFERENCES } from "../server/utils/mutations";
+import Link from "next/link";
+
 
 const Profile = () => {
   // Define state variables to store user preferences

@@ -12,6 +12,7 @@ const NavBar = () => {
   const [isLogin, setIsLogin] = useState(true);
   const { user, logout } = useContext(AuthContext);
 
+
   const [authReady, setAuthReady] = useState(false);
 
   useEffect(() => {
@@ -65,14 +66,21 @@ const NavBar = () => {
             <Link href="/about"><span className="cursor-pointer">About</span></Link>
             </li>
             {authReady && user ? (
+            <>
+              <li className="hover:text-sky-400">
+                <Link href="/profile">
+                  <span>Profile</span>
+                </Link>
+              </li>
               <li className="hover:text-sky-400">
                 <a onClick={userLogout}>Logout</a>
               </li>
-            ) : (
-              <li className="hover:text-sky-400">
-                <a onClick={() => setShowModal(true)}>Login/Signup</a>
-              </li>
-            )}
+            </>
+          ) : (
+            <li className="hover:text-sky-400">
+              <a onClick={() => setShowModal(true)}>Login/Signup</a>
+            </li>
+          )}
           </ul>
         </nav>
         <div
@@ -96,14 +104,21 @@ const NavBar = () => {
     </Link>
   </li>
   {authReady && user ? (
-    <li className="py-6 text-4xl hover:text-sky-400" onClick={onClick}>
-      <a onClick={userLogout}>Logout</a>
-    </li>
-  ) : (
-    <li className="py-6 text-4xl hover:text-sky-400" onClick={onClick}>
-      <a onClick={() => setShowModal(true)}>Login/Signup</a>
-    </li>
-  )}
+            <>
+              <li className="hover:text-sky-400">
+                <Link href="/profile">
+                  <span>Profile</span>
+                </Link>
+              </li>
+              <li className="hover:text-sky-400">
+                <a onClick={userLogout}>Logout</a>
+              </li>
+            </>
+          ) : (
+            <li className="hover:text-sky-400">
+              <a onClick={() => setShowModal(true)}>Login/Signup</a>
+            </li>
+          )}
   <li className="py-6 text-4xl hover:text-sky-400" onClick={onClick}>
     <Link href="/leaderboard">
       <span className="cursor-pointer">Leaderboard</span>

@@ -37,7 +37,7 @@ const RegisterModal = (props) => {
     },
     onCompleted(data) {
       console.log("onCompleted");
-      window.location.assign("/profile");
+      window.location.assign("/");
     },
 
     onError({ graphQLErrors }) {
