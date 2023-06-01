@@ -1,20 +1,26 @@
 import { useState } from 'react';
 
-const BoredApi = () => {
+const BoredApi = ({ userPreferences }) => {
   const [activity, setActivity] = useState({});
 
   const SearchApi = () => {
-    fetch('http://www.boredapi.com/api/activity')
+    const apiUrl = `http://www.boredapi.com/api/activity?type=${userPreferences.interest}`;
+    console.log('API Url:', apiUrl);
+    
+    fetch(apiUrl)
       .then(function(response) {
+        console.log('Response:', response);
         return response.json();
       })
       .then(function(response) {
+        console.log('Parsed response:', response);
         setActivity(response);
       })
       .catch(function(error) {
-        console.error(error);
+        console.error('Error fetching from API:', error);
       });
   };
+
 
   return (
     <div className="flex flex-col items-center justify-center h-screen">

@@ -10,3 +10,14 @@ export const AUTHENTICATED_USER = gql`
     }
   }
 `;
+
+export const GET_USER_PREFERENCES = gql`
+  query GetUserPreferences($id: ID!) {
+    getUserPreferences(id: $id) {
+      interest
+      age
+      location
+      skillLevel
+    }
+  }
+`;

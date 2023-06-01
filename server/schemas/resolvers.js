@@ -16,6 +16,8 @@ const resolvers = {
 
       return await UserModel.findById(user._id);
     },
+    getUserPreferences: async (_, { id }) => await UserModel.findById(id)
+
   },
   Mutation: {
     async registerUser(_, { registerInput: { username, email, password } }) {

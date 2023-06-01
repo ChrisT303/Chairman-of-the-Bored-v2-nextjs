@@ -60,12 +60,23 @@ const Profile = () => {
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label className="block mb-2">Interest</label>
-          <input
-            type="text"
+          <select
             value={interest}
             onChange={(e) => setInterest(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded"
-          />
+          >
+            <option value="">Select interest</option>
+            <option value="education">Education</option>
+            <option value="recreational">Recreational</option>
+            <option value="social">Social</option>
+            <option value="diy">DIY</option>
+            <option value="charity">Charity</option>
+            <option value="cooking">Cooking</option>
+            <option value="relaxation">Relaxation</option>
+            <option value="busywork">Busywork</option>
+            <option value="exercise">Exercise</option>
+          </select>
+
         </div>
         <div className="mb-4">
           <label className="block mb-2">Age</label>

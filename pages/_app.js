@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect, useState } from 'react';
 import {
   ApolloClient,
   InMemoryCache,
@@ -62,6 +62,20 @@ const client = new ApolloClient({
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
+  const [DynamicComponent, setDynamicComponent] = useState();
+
+  useEffect(() => {
+    async function load() {
+      if(Component.displayName === 'HomePage') {
+        const dynamicComponent = (await dynamic(() => import("../pages"), { ssr: false })).default;
+        setDynamicComponent(() => dynamicComponent);
+      } else {
+        setDynamicComponent(() => Component);
+      }
+    }
+
+    load();
+  }, [Component]);
 
   const pageBackground = () => {
     const route = router.pathname;
@@ -82,7 +96,8 @@ function MyApp({ Component, pageProps }) {
       <AuthProvider>
         <Navbar />
         <div className={`${pageBackground()} min-h-screen`}>
-          <Component {...pageProps} />
+          {/* Use the dynamically imported component here */}
+          {DynamicComponent && <DynamicComponent {...pageProps} />}
         </div>
       </AuthProvider>
     </ApolloProvider>

@@ -56,6 +56,8 @@ const typeDefs = gql`
     users: [User]
     user(id: ID!): User
     authenticatedUser: User 
+    getUserPreferences(id: ID!): User
+
   }
 
   type Mutation {
