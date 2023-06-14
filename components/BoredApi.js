@@ -1,38 +1,42 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 
+const defaultUserPreferences = {
+  interest: ["recreational", "social", "diy"],
+  // ...other default values if you want to add later for default user preferences
+};
 
-const BoredApi = ({ userPreferences }) => {
+const BoredApi = ({ userPreferences = defaultUserPreferences }) => {
   const [activity, setActivity] = useState({});
+
   const SearchApi = async () => {
-    // check if userPreferences.interest exists and is an array
-    if (!userPreferences.interest || !Array.isArray(userPreferences.interest)) {
-      console.log("No interests selected");
-      return;
-    }
-  
-    console.log(userPreferences.interest); // log the interests array
-  
+    // If userPreferences is undefined, use the defaultUserPreferences
+    const preferences = userPreferences || defaultUserPreferences;
+
+    console.log(preferences.interest);
+
     const activities = await Promise.all(
-      userPreferences.interest.map(async (interest) => {
+      preferences.interest.map(async (interest) => {
         const apiUrl = `http://www.boredapi.com/api/activity?type=${interest}`;
         const response = await fetch(apiUrl);
         const data = await response.json();
-        console.log(`Response for ${interest}:`, data); // log the response for each interest
+        console.log(`Response for ${interest}:`, data);
         return data;
       })
     );
-  
-    const nonEmptyActivities = activities.filter(activity => activity.activity);
-    if(nonEmptyActivities.length > 0) {
-      const randomActivity = nonEmptyActivities[Math.floor(Math.random() * nonEmptyActivities.length)];
+
+    const nonEmptyActivities = activities.filter(
+      (activity) => activity.activity
+    );
+    if (nonEmptyActivities.length > 0) {
+      const randomActivity =
+        nonEmptyActivities[
+          Math.floor(Math.random() * nonEmptyActivities.length)
+        ];
       setActivity(randomActivity);
     } else {
       console.log("No activities found for the selected interests.");
     }
   };
-  
-  
-  
 
   return (
     <div className="flex flex-col items-center justify-center h-screen">
@@ -57,4 +61,3 @@ const BoredApi = ({ userPreferences }) => {
 };
 
 export default BoredApi;
-
