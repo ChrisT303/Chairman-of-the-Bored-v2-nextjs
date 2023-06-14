@@ -18,7 +18,11 @@ const HomePage = () => {
   if (authLoading || queryLoading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
 
-  const userPreferences = data?.getUserPreferences;
+  // Ensure userPreferences.interest is an array
+  let userPreferences = data?.getUserPreferences;
+  if (userPreferences && typeof userPreferences.interest === 'string') {
+    userPreferences = { ...userPreferences, interest: userPreferences.interest.split(',') };
+  }
 
   return (
     <div className=" min-h-screen flex flex-col">
@@ -36,6 +40,7 @@ const HomePage = () => {
 };
 
 export default HomePage;
+
 
 
 

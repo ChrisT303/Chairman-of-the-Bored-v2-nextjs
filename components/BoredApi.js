@@ -1,26 +1,38 @@
-import { useState } from 'react';
+import React, {useState} from "react";
+
 
 const BoredApi = ({ userPreferences }) => {
   const [activity, setActivity] = useState({});
-
-  const SearchApi = () => {
-    const apiUrl = `http://www.boredapi.com/api/activity?type=${userPreferences.interest}`;
-    console.log('API Url:', apiUrl);
-    
-    fetch(apiUrl)
-      .then(function(response) {
-        console.log('Response:', response);
-        return response.json();
+  const SearchApi = async () => {
+    // check if userPreferences.interest exists and is an array
+    if (!userPreferences.interest || !Array.isArray(userPreferences.interest)) {
+      console.log("No interests selected");
+      return;
+    }
+  
+    console.log(userPreferences.interest); // log the interests array
+  
+    const activities = await Promise.all(
+      userPreferences.interest.map(async (interest) => {
+        const apiUrl = `http://www.boredapi.com/api/activity?type=${interest}`;
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+        console.log(`Response for ${interest}:`, data); // log the response for each interest
+        return data;
       })
-      .then(function(response) {
-        console.log('Parsed response:', response);
-        setActivity(response);
-      })
-      .catch(function(error) {
-        console.error('Error fetching from API:', error);
-      });
+    );
+  
+    const nonEmptyActivities = activities.filter(activity => activity.activity);
+    if(nonEmptyActivities.length > 0) {
+      const randomActivity = nonEmptyActivities[Math.floor(Math.random() * nonEmptyActivities.length)];
+      setActivity(randomActivity);
+    } else {
+      console.log("No activities found for the selected interests.");
+    }
   };
-
+  
+  
+  
 
   return (
     <div className="flex flex-col items-center justify-center h-screen">
@@ -45,3 +57,4 @@ const BoredApi = ({ userPreferences }) => {
 };
 
 export default BoredApi;
+

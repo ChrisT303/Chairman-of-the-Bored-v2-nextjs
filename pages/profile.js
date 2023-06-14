@@ -2,12 +2,10 @@ import React, { useState, useContext } from "react";
 import { useMutation } from "@apollo/react-hooks";
 import { AuthContext } from "../context/authContext";
 import { UPDATE_USER_PREFERENCES } from "../server/utils/mutations";
-import Link from "next/link";
-
+import Select from "react-select";
 
 const Profile = () => {
-  // Define state variables to store user preferences
-  const [interest, setInterest] = useState("");
+  const [interest, setInterest] = useState([]);
   const [age, setAge] = useState("");
   const [location, setLocation] = useState("");
   const [skillLevel, setSkillLevel] = useState("");
@@ -16,43 +14,59 @@ const Profile = () => {
 
   const { user, loading } = useContext(AuthContext);
 
-  const [updateUserPreferences, { loading: updateLoading }] = useMutation(UPDATE_USER_PREFERENCES, {
-    onCompleted: data => {
-      setSuccessMessage('Profile updated successfully');
-    },
-    onError: error => {
-      setErrorMessage(error.message);
+  const options = [
+    { value: "education", label: "Education" },
+    { value: "recreational", label: "Recreational" },
+    { value: "social", label: "Social" },
+    { value: "diy", label: "DIY" },
+    { value: "charity", label: "Charity" },
+    { value: "cooking", label: "Cooking" },
+    { value: "relaxation", label: "Busywork" },
+    { value: "exercise", label: "Exercise" },
+  ];
+
+  const handleInterestChange = (selectedOptions) => {
+    setInterest(selectedOptions);
+  };
+
+  const [updateUserPreferences, { loading: updateLoading }] = useMutation(
+    UPDATE_USER_PREFERENCES,
+    {
+      onCompleted: (data) => {
+        setSuccessMessage("Profile updated successfully");
+      },
+      onError: (error) => {
+        setErrorMessage(error.message);
+      },
     }
-  });
-  
+  );
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const userId = user.id;
-  
+
     let ageInput = parseInt(age);
-  
+
     if (isNaN(ageInput)) {
-      setErrorMessage('Age must be a valid number');
+      setErrorMessage("Age must be a valid number");
       return;
     }
-  
+
+    const interestString = interest.map(i => i.value).join(", ");
+
+
     await updateUserPreferences({
       variables: {
-        userPreferenceInput: {
-          id: userId,
-          interest,
-          age: ageInput,
-          location,
-          skillLevel
-        }
+          userPreferenceInput: {
+              id: userId,
+              interest: interestString,
+              age: ageInput,
+              location,
+              skillLevel
+          }
       }
-    });
+  });
   };
-  
-  
-  
-  
 
   return (
     <div className="container mx-auto p-4">
@@ -60,23 +74,14 @@ const Profile = () => {
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label className="block mb-2">Interest</label>
-          <select
+          <Select
+            isMulti
             value={interest}
-            onChange={(e) => setInterest(e.target.value)}
+            onChange={handleInterestChange}
+            options={options}
             className="w-full p-2 border border-gray-300 rounded"
-          >
-            <option value="">Select interest</option>
-            <option value="education">Education</option>
-            <option value="recreational">Recreational</option>
-            <option value="social">Social</option>
-            <option value="diy">DIY</option>
-            <option value="charity">Charity</option>
-            <option value="cooking">Cooking</option>
-            <option value="relaxation">Relaxation</option>
-            <option value="busywork">Busywork</option>
-            <option value="exercise">Exercise</option>
-          </select>
-
+            classNamePrefix="select"
+          />
         </div>
         <div className="mb-4">
           <label className="block mb-2">Age</label>
