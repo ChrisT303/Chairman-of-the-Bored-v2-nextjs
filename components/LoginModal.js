@@ -62,7 +62,7 @@ const LoginModal = (props) => {
                   onChange={onChange}
                 />
                 <input
-                  type="text"
+                  type="password"
                   className="w-full space-y-4  p-6 border border-gray-300 rounded-md placeholder:font-light "
                   placeholder="Password"
                   label="Password"
