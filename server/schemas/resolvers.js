@@ -16,8 +16,7 @@ const resolvers = {
 
       return await UserModel.findById(user._id);
     },
-    getUserPreferences: async (_, { id }) => await UserModel.findById(id)
-
+    getUserPreferences: async (_, { id }) => await UserModel.findById(id),
   },
   Mutation: {
     async registerUser(_, { registerInput: { username, email, password } }) {
@@ -69,7 +68,7 @@ const resolvers = {
             expiresIn: "2h",
           }
         );
-        
+
         user.token = token;
 
         const res = await user;
@@ -86,7 +85,7 @@ const resolvers = {
 
       const user = await UserModel.findById(id);
       if (!user) {
-        throw new Error('User not found');
+        throw new Error("User not found");
       }
 
       user.interest = interest || user.interest;
@@ -98,8 +97,34 @@ const resolvers = {
 
       return user;
     },
+
+    async saveActivity(_, { userId, activity }, context) {
+      // first, ensure user is authenticated
+      const { user } = context;
+      if (!user) {
+        throw new Error("Authentication required to save activity");
+      }
+
+      // check if the user exists
+      const userFromDb = await UserModel.findById(userId);
+      if (!userFromDb) {
+        throw new Error("User not found");
+      }
+
+      // check if the activity already exists in the user's saved activities
+      const isActivityExists = userFromDb.savedActivities.some(
+        (savedActivity) => savedActivity.key === activity.key
+      );
+
+      // if the activity does not exist in user's saved activities, add it
+      if (!isActivityExists) {
+        userFromDb.savedActivities.push(activity);
+        await userFromDb.save();
+      }
+
+      return userFromDb;
+    },
   },
 };
 
 module.exports = resolvers;
-

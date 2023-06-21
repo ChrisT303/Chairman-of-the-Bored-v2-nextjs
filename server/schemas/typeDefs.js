@@ -11,6 +11,7 @@ const typeDefs = gql`
     age: Int
     location: String
     skillLevel: String
+    savedActivities: [SavedActivity]
   }
 
   input RegisterInput {
@@ -37,13 +38,37 @@ const typeDefs = gql`
     user(id: ID!): User
     authenticatedUser: User
     getUserPreferences(id: ID!): User
+    getUserSavedActivities(userId: ID!): [SavedActivity]
   }
 
   type Mutation {
     registerUser(registerInput: RegisterInput): User
     loginUser(loginInput: LoginInput!): User
     updateUserPreferences(input: UserPreferenceInput!): User
+    saveActivity(userId: ID!, activity: ActivityInput!): User
   }
+  
+  input ActivityInput {
+    activity: String!
+    type: String!
+    participants: Int!
+    price: Float!
+  }
+  
+  type SavedActivity {
+    id: ID!
+    userId: ID!
+    activity: Activity!
+  }
+  
+  type Activity {
+    activity: String!
+    type: String!
+    participants: Int!
+    price: Float!
+  }
+  
 `;
 
 module.exports = typeDefs;
+

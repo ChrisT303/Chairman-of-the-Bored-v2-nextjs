@@ -21,3 +21,18 @@ export const GET_USER_PREFERENCES = gql`
     }
   }
 `;
+
+export const GET_USER_SAVED_ACTIVITIES = gql`
+  query GetUserSavedActivities($userId: ID!) {
+    getUserSavedActivities(userId: $userId) {
+      id
+      activity {
+        activity
+        type
+        participants
+        price
+      }
+    }
+  }
+`;
+
