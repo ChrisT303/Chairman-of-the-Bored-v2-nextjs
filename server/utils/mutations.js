@@ -33,5 +33,24 @@ export const UPDATE_USER_PREFERENCES = gql`
   }
 `;
 
+export const SAVE_ACTIVITY = gql`
+  mutation SaveActivity($userId: ID!, $activity: ActivityInput!) {
+    saveActivity(userId: $userId, activity: $activity) {
+      id
+      savedActivities {
+        id
+        activity {
+          activity
+          type
+          participants
+          price
+        }
+      }
+    }
+  }
+`;
+
+
+
 
 

@@ -53,7 +53,11 @@ const typeDefs = gql`
     type: String!
     participants: Int!
     price: Float!
+    link: String
+    key: String
+    accessibility: Float
   }
+  
   
   type SavedActivity {
     id: ID!

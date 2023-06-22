@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import { useMutation } from "@apollo/react-hooks";
 import { AuthContext } from "../context/authContext";
 import { UPDATE_USER_PREFERENCES } from "../server/utils/mutations";
+import { GET_USER_SAVED_ACTIVITIES } from "../server/utils/queries";
 import Select from "react-select";
 
 const Profile = () => {
@@ -41,6 +42,12 @@ const Profile = () => {
     }
   );
 
+  const { data: savedActivitiesData } = useQuery(GET_USER_SAVED_ACTIVITIES, {
+    variables: {
+      userId: user.id,  // assuming user id is stored in auth context when user is logged in
+    },
+  });
+  
   const handleSubmit = async (event) => {
     event.preventDefault();
     const userId = user.id;
@@ -125,8 +132,20 @@ const Profile = () => {
           Update Profile
         </button>
       </form>
+      <div className="mt-10">
+        <h2 className="text-2xl mb-4">Saved Activities</h2>
+        {savedActivitiesData && savedActivitiesData.savedActivities.map((savedActivity) => (
+          <div key={savedActivity.id}>
+            <h2 className="text-2xl font-bold">{savedActivity.activity.activity}</h2>
+            <p>Type: {savedActivity.activity.type}</p>
+            <p>Participants: {savedActivity.activity.participants}</p>
+            <p>Price: {savedActivity.activity.price}</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
+  
 };
 
 export default Profile;

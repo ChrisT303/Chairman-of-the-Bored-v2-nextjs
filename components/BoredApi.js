@@ -1,4 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { useMutation } from "@apollo/react-hooks"; 
+import { SAVE_ACTIVITY } from "../server/utils/mutations";
+import { AuthContext } from "../context/authContext";
+
+
+
 
 const defaultUserPreferences = {
   interest: ["recreational", "social", "diy"],
@@ -7,6 +13,9 @@ const defaultUserPreferences = {
 
 const BoredApi = ({ userPreferences = defaultUserPreferences }) => {
   const [activity, setActivity] = useState({});
+  const [saveActivity] = useMutation(SAVE_ACTIVITY);
+  const { user } = useContext(AuthContext);
+
 
   const SearchApi = async () => {
     // If userPreferences is undefined, use the defaultUserPreferences
@@ -38,6 +47,25 @@ const BoredApi = ({ userPreferences = defaultUserPreferences }) => {
     }
   };
 
+  const saveActivityHandler = async (activity) => {
+    const userId = user.id;
+  
+    const { data } = await saveActivity({
+      variables: {
+        userId,
+        activity,
+      },
+    });
+  
+    if (data) {
+      console.log("Activity saved successfully");
+    } else {
+      console.log("Failed to save activity");
+    }
+  };
+  
+
+
   return (
     <div className="flex flex-col items-center justify-center h-screen">
       <div className="text-center mb-8">
@@ -56,8 +84,17 @@ const BoredApi = ({ userPreferences = defaultUserPreferences }) => {
       >
         Tell me what to do!
       </button>
+      {user && (
+        <button
+          onClick={() => saveActivityHandler(activity)}
+          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded ml-2 mt-2"
+        >
+          Save this activity
+        </button>
+      )}
     </div>
   );
+
 };
 
 export default BoredApi;
