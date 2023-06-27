@@ -96,7 +96,6 @@ function MyApp({ Component, pageProps }) {
       <AuthProvider>
         <Navbar />
         <div className={`${pageBackground()} min-h-screen`}>
-          {/* Use the dynamically imported component here */}
           {DynamicComponent && <DynamicComponent {...pageProps} />}
         </div>
       </AuthProvider>

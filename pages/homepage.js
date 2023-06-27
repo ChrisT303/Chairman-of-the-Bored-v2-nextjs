@@ -18,7 +18,6 @@ const HomePage = () => {
   if (authLoading || queryLoading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
 
-  // Ensure userPreferences.interest is an array
   let userPreferences = data?.getUserPreferences;
   if (userPreferences && typeof userPreferences.interest === 'string') {
     userPreferences = { ...userPreferences, interest: userPreferences.interest.split(',') };

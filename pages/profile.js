@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { useMutation } from "@apollo/react-hooks";
+import { useMutation, useQuery } from "@apollo/react-hooks";
 import { AuthContext } from "../context/authContext";
 import { UPDATE_USER_PREFERENCES } from "../server/utils/mutations";
 import { GET_USER_SAVED_ACTIVITIES } from "../server/utils/queries";
