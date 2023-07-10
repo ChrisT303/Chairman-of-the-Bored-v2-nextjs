@@ -44,10 +44,10 @@ const Profile = () => {
 
   const { data: savedActivitiesData } = useQuery(GET_USER_SAVED_ACTIVITIES, {
     variables: {
-      userId: user.id,  // assuming user id is stored in auth context when user is logged in
+      userId: user.id, // assuming user id is stored in auth context when user is logged in
     },
   });
-  
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const userId = user.id;
@@ -59,20 +59,19 @@ const Profile = () => {
       return;
     }
 
-    const interestString = interest.map(i => i.value).join(", ");
-
+    const interestString = interest.map((i) => i.value).join(", ");
 
     await updateUserPreferences({
       variables: {
-          userPreferenceInput: {
-              id: userId,
-              interest: interestString,
-              age: ageInput,
-              location,
-              skillLevel
-          }
-      }
-  });
+        userPreferenceInput: {
+          id: userId,
+          interest: interestString,
+          age: ageInput,
+          location,
+          skillLevel,
+        },
+      },
+    });
   };
 
   return (
@@ -134,9 +133,11 @@ const Profile = () => {
       </form>
       <div className="mt-10">
         <h2 className="text-2xl mb-4">Saved Activities</h2>
-        {savedActivitiesData && savedActivitiesData.savedActivities.map((savedActivity) => (
+        {savedActivitiesData?.savedActivities?.map((savedActivity) => (
           <div key={savedActivity.id}>
-            <h2 className="text-2xl font-bold">{savedActivity.activity.activity}</h2>
+            <h2 className="text-2xl font-bold">
+              {savedActivity.activity.activity}
+            </h2>
             <p>Type: {savedActivity.activity.type}</p>
             <p>Participants: {savedActivity.activity.participants}</p>
             <p>Price: {savedActivity.activity.price}</p>
@@ -145,7 +146,6 @@ const Profile = () => {
       </div>
     </div>
   );
-  
 };
 
 export default Profile;
