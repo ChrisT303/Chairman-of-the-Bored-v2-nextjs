@@ -6,7 +6,11 @@ function authReducer(state, action) {
     case "LOGIN":
       return {
         ...state,
-        user: { id: action.payload.user_id, ...action.payload },
+        user: {
+          id: action.payload.id,
+          name: action.payload.name,
+          ...action.payload, 
+        },
       };
     case "LOGOUT":
       return {
@@ -17,6 +21,8 @@ function authReducer(state, action) {
       return state;
   }
 }
+
+
 
 const initialState = {
   user: null,
@@ -44,12 +50,19 @@ function AuthProvider(props) {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
   function login(userData) {
-    localStorage.setItem("jwtToken", userData.token);
+    const { user_id, name, token } = userData;
+  
+    localStorage.setItem("jwtToken", token);
     dispatch({
       type: "LOGIN",
-      payload: userData,
+      payload: {
+        id: user_id,
+        name: name,
+      },
     });
   }
+  
+  
 
   function logout() {
     localStorage.removeItem("jwtToken");
@@ -69,8 +82,3 @@ function AuthProvider(props) {
 }
 
 export { AuthContext, AuthProvider };
-
-
-
-
-

@@ -9,6 +9,7 @@ import { GET_USER_PREFERENCES } from '../server/utils/queries';
 
 const HomePage = () => {
   const { user, loading: authLoading } = useContext(AuthContext);
+  console.log("user:", user);
 
   const { loading: queryLoading, error, data } = useQuery(GET_USER_PREFERENCES, {
     variables: { id: user?.id },
@@ -26,7 +27,7 @@ const HomePage = () => {
   return (
     <div className=" min-h-screen flex flex-col">
       <div className="flex flex-col">
-        <Greeting />
+      <Greeting  />
       </div>
       <div className="flex flex-col p-10" id="bored-api">
         <BoredApi userPreferences={userPreferences} />

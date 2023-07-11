@@ -1,10 +1,21 @@
-const UserGreeting = (props) => {
+import react, { useContext } from "react";
+import { AuthContext } from "../context/authContext";
+
+
+const UserGreeting = () => {
+  const { user } = useContext(AuthContext);
+  const userName = user?.name;
+
   return (
-    <div className=" flex justify-center font-black bg-yellow-300/60 text-black text-center">
-      <h1>Youre Bored again?! So are we, find your next activity! </h1>
+    <div className="flex justify-center font-black bg-yellow-300/60 text-black text-center">
+      <h1>Hello, {userName}! You're bored again?! So are we. Find your next activity!</h1>
     </div>
   );
 };
+
+
+
+
 
 const GenericGreeting = (props) => {
   return (
@@ -14,13 +25,25 @@ const GenericGreeting = (props) => {
   );
 };
 
-const Greeting = (props) => {
-  const LoggedIn = props.LoggedIn;
-  if (LoggedIn) {
+const Greeting = () => {
+  const { user } = useContext(AuthContext);
+  const loggedIn = user !== null;
+
+  if (loggedIn) {
     return <UserGreeting />;
   } else {
     return <GenericGreeting />;
   }
 };
+
+
+
+
+
+
+
+
+
+
 
 export default Greeting;

@@ -99,6 +99,8 @@ const resolvers = {
     },
 
     async saveActivity(_, { userId, activity }, context) {
+      console.log('Context in saveActivity:', context);
+
       // first, ensure user is authenticated
       const { user } = context;
       if (!user) {
