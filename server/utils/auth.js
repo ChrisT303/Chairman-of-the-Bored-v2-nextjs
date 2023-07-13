@@ -45,9 +45,10 @@ class AuthService {
     }
   }
   signToken(userData) {
-    const token = jwt.sign({ data: userData }, JWT_SECRET, { expiresIn: "1h" });
+    const token = jwt.sign(userData, JWT_SECRET, { expiresIn: "1h" });
     return token;
   }
+  
   verifyToken(token) {
     console.log("Verifying token:", token);
     if (!token) {

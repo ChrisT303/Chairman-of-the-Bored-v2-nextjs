@@ -8,8 +8,8 @@ function authReducer(state, action) {
         ...state,
         user: {
           id: action.payload.id,
-          name: action.payload.name,
-          ...action.payload, 
+          username: action.payload.username,
+          ...action.payload,
         },
       };
     case "LOGOUT":
@@ -22,8 +22,6 @@ function authReducer(state, action) {
   }
 }
 
-
-
 const initialState = {
   user: null,
 };
@@ -35,7 +33,10 @@ if (typeof window !== "undefined") {
     if (decodedToken.exp * 1000 < Date.now()) {
       localStorage.removeItem("jwtToken");
     } else {
-      initialState.user = { id: decodedToken.user_id, ...decodedToken };
+      initialState.user = {
+        id: decodedToken.user_id,
+        name: decodedToken.username,
+      };
     }
   }
 }
@@ -50,19 +51,17 @@ function AuthProvider(props) {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
   function login(userData) {
-    const { user_id, name, token } = userData;
-  
+    const { user_id, username, token } = userData;
+
     localStorage.setItem("jwtToken", token);
     dispatch({
       type: "LOGIN",
       payload: {
         id: user_id,
-        name: name,
+        name: username,
       },
     });
   }
-  
-  
 
   function logout() {
     localStorage.removeItem("jwtToken");

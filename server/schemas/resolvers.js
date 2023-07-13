@@ -40,7 +40,7 @@ const resolvers = {
       });
 
       const token = jwt.sign(
-        { user_id: newUser._id, email },
+        { user_id: newUser._id, email, username: newUser.username },
         process.env.JWT_SECRET,
         {
           expiresIn: "2h",
@@ -49,9 +49,12 @@ const resolvers = {
 
       newUser.token = token;
 
+      console.log(newUser);
+
       const res = await newUser.save();
       return {
         id: res.id,
+        name: res.name,
         ...res._doc,
       };
     },
@@ -62,7 +65,7 @@ const resolvers = {
       if (user && (await bcrypt.compare(password, user.password))) {
         console.log("passwords match");
         const token = jwt.sign(
-          { user_id: user._id, email },
+          { user_id: user._id, email, username: user.username },
           process.env.JWT_SECRET,
           {
             expiresIn: "2h",
@@ -74,6 +77,7 @@ const resolvers = {
         const res = await user;
         return {
           id: res.id,
+          username: res.username,
           ...res._doc,
         };
       } else {
@@ -99,7 +103,7 @@ const resolvers = {
     },
 
     async saveActivity(_, { userId, activity }, context) {
-      console.log('Context in saveActivity:', context);
+      console.log("Context in saveActivity:", context);
 
       // first, ensure user is authenticated
       const { user } = context;
