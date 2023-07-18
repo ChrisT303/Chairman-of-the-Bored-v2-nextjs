@@ -1,6 +1,8 @@
 const { User } = require("../models");
+const { Activity } = require("../models");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+
 require("dotenv").config();
 
 const resolvers = {
@@ -101,30 +103,36 @@ const resolvers = {
 
       return user;
     },
-
-    async saveActivity(_, { userId, activity }, context) {
+    async saveActivity(_, { activityId }, context) {
+      
       console.log("Context in saveActivity:", context);
 
       // first, ensure user is authenticated
-      const { user } = context;
+      const { user } = context.req; // use user from context instead of userId from input
       if (!user) {
         throw new Error("Authentication required to save activity");
       }
 
       // check if the user exists
-      const userFromDb = await User.findById(userId);
+      const userFromDb = await User.findById(user._id); // use user._id from context instead of userId from input
       if (!userFromDb) {
         throw new Error("User not found");
       }
 
+      // check if the activity exists
+      const activity = await Activity.findById(activityId);
+      if (!activity) {
+        throw new Error("Activity not found");
+      }
+
       // check if the activity already exists in the user's saved activities
       const isActivityExists = userFromDb.savedActivities.some(
-        (savedActivity) => savedActivity.key === activity.key
+        (savedActivity) => savedActivity.toString() === activityId
       );
 
       // if the activity does not exist in user's saved activities, add it
       if (!isActivityExists) {
-        userFromDb.savedActivities.push(activity);
+        userFromDb.savedActivities.push(activityId);
         await userFromDb.save();
       }
 
@@ -134,3 +142,4 @@ const resolvers = {
 };
 
 module.exports = resolvers;
+

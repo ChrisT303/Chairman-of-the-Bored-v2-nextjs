@@ -36,7 +36,9 @@ if (typeof window !== "undefined") {
       initialState.user = {
         id: decodedToken.user_id,
         name: decodedToken.username,
+        token: localStorage.getItem("jwtToken")
       };
+      
     }
   }
 }

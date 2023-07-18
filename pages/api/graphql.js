@@ -15,19 +15,6 @@ const requestLoggerPlugin = {
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: async ({ req }) => {
-    console.log("Creating context with request:", req);
-    if (!req || !req.headers) {
-      console.warn("Request has no headers, skipping context.");
-      return {};
-    }
-    const token = req.headers.authorization
-      ? req.headers.authorization.split(" ").pop()
-      : "";
-    const user = await AuthService.verifyToken(token);
-    console.log("Created context:", { req, user });
-    return { req, user };
-  },
   plugins: [requestLoggerPlugin], // Add the plugin to the server instance
 });
 
@@ -38,12 +25,12 @@ const playground = expressPlayground({
 
 const apiRoute = nextConnect();
 
-apiRoute.all(async function handler(req, res) {
+apiRoute.all(async function handler(req, res, next) {
   if (req.method === "OPTIONS") {
     res.end();
     return false;
   }
-
+  
   if (req.method === "GET") {
     return playground(req, res);
   }
@@ -51,6 +38,16 @@ apiRoute.all(async function handler(req, res) {
   console.log("Incoming request:", req.method);
   console.log("Request headers:", req.headers);
 
+  // verify and attach user to req object
+  if (req.headers) {
+    const token = req.headers.authorization ? req.headers.authorization.split(" ").pop() : "";
+    req.user = await AuthService.verifyToken(token);
+  }
+
+  next();
+});
+
+apiRoute.all(async function handler(req, res) {
   try {
     await dbConnect();
     console.log("Connecting to database...");
@@ -62,9 +59,8 @@ apiRoute.all(async function handler(req, res) {
       query: body.query,
       variables: body.variables,
       operationName: body.operationName,
-      context: async () => ({ req }),
+      context: { req },
     });
-    
 
     console.log("Operation response:", response);
 
@@ -75,7 +71,6 @@ apiRoute.all(async function handler(req, res) {
   }
 });
 
-
 export default apiRoute;
 
 export const config = {
@@ -83,6 +78,7 @@ export const config = {
     bodyParser: true,
   },
 };
+
 
 
 
