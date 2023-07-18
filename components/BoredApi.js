@@ -67,10 +67,10 @@ const BoredApi = ({ userPreferences = defaultUserPreferences }) => {
 
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
-      <div className="text-center mb-8">
+    <div className="flex flex-col items-center justify-start pt-10 h-screen">
+      <div className="bg-white bg-opacity-70 shadow-lg rounded-lg p-6 mb-8">
         {activity.activity && (
-          <div>
+          <div className="text-center">
             <h2 className="text-2xl font-bold">{activity.activity}</h2>
             <p>Type: {activity.type}</p>
             <p>Participants: {activity.participants}</p>
@@ -94,6 +94,9 @@ const BoredApi = ({ userPreferences = defaultUserPreferences }) => {
       )}
     </div>
   );
+  
+  
+  
 
 };
 
