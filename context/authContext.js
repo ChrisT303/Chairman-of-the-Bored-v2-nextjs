@@ -2,7 +2,6 @@ import React, { createContext, useReducer, useEffect } from "react";
 import jwtDecode from "jwt-decode";
 import Cookies from 'js-cookie';
 
-
 function authReducer(state, action) {
   switch (action.type) {
     case "LOGIN":
@@ -28,22 +27,35 @@ const initialState = {
   user: null,
 };
 
-if (typeof window !== "undefined") {
-  if (localStorage.getItem('jwtToken')) {
-    const decodedToken = jwtDecode(localStorage.getItem('jwtToken'));
+function isValidJwt(jwtToken) {
+  if (!jwtToken) {
+    return false;
+  }
+
+  const jwtParts = jwtToken.split('.');
+  return jwtParts.length === 3;
+}
+
+
+if (Cookies.get('jwtToken')) {
+  const token = Cookies.get('jwtToken');
+  
+  // check if token exists, is not null and has a valid JWT structure
+  if (isValidJwt(token)) {
+    const decodedToken = jwtDecode(token);
 
     if (decodedToken.exp * 1000 < Date.now()) {
-      localStorage.removeItem("jwtToken");
+      Cookies.remove("jwtToken");
     } else {
       initialState.user = {
         id: decodedToken.user_id,
         name: decodedToken.username,
-        token: localStorage.getItem('jwtToken')
-      };   
+        token: Cookies.get('jwtToken')
+      };
     }
   }
-
 }
+
 
 const AuthContext = createContext({
   user: null,
@@ -57,7 +69,7 @@ function AuthProvider(props) {
   function login(userData) {
     const { user_id, username, token } = userData;
 
-    localStorage.setItem("jwtToken", token);
+    Cookies.set("jwtToken", token);
     dispatch({
       type: "LOGIN",
       payload: {
@@ -68,7 +80,7 @@ function AuthProvider(props) {
   }
 
   function logout() {
-    localStorage.removeItem("jwtToken");
+    Cookies.remove("jwtToken");
     dispatch({ type: "LOGOUT" });
   }
 
@@ -85,3 +97,4 @@ function AuthProvider(props) {
 }
 
 export { AuthContext, AuthProvider };
+

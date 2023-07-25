@@ -21,43 +21,30 @@ const httpLink = new HttpLink({
   credentials: 'include',
 });
 
-
 const requestLogger = new ApolloLink((operation, forward) => {
   console.log("Request:", operation);
 
-  let headers = operation.getContext().headers;
-  console.log("Headers:", headers);
-
-  let token;
-  if (headers) {
-    token = headers.authorization;
-  }
-
+  // Get token from cookies
+  const token = Cookies.get('jwtToken');
   console.log(`Extracted token: ${token}`);
 
   return forward(operation);
 });
 
+
 const authLink = setContext((_, { headers }) => {
   // get the authentication token from local storage if it exists
   const token = Cookies.get('jwtToken');
 
-  Cookies.set('jwtToken', token);
-  console.log('Token set in cookies:', Cookies.get('jwtToken')); // This should print your token
-  
-
   // return the headers to the context so httpLink can read them
-  const newHeaders = {
+  return {
     headers: {
       ...headers,
       authorization: token ? `Bearer ${token}` : "",
     }
   };
-
-  console.log(`New headers: ${JSON.stringify(newHeaders.headers)}`);
-
-  return newHeaders;
 });
+
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors)

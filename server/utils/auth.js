@@ -1,6 +1,6 @@
 import decode from "jwt-decode";
 import jwt from "jsonwebtoken";
-
+import Cookies from 'js-cookie';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -26,25 +26,23 @@ class AuthService {
   }
 
   getToken() {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem('jwtToken');
-    }
-    return null;
+    return Cookies.get('jwtToken');
   }
 
   login(idToken) {
+    Cookies.set("jwtToken", idToken);
     if (typeof window !== "undefined") {
-      localStorage.setItem("jwtToken", idToken);
       window.location.assign("/");
     }
   }
 
   logout() {
+    Cookies.remove("jwtToken");
     if (typeof window !== "undefined") {
-      localStorage.removeItem("jwtToken");
       window.location.assign("/");
     }
   }
+
   signToken(userData) {
     const token = jwt.sign(userData, JWT_SECRET, { expiresIn: "1h" });
     return token;
@@ -69,3 +67,4 @@ class AuthService {
 const authService = new AuthService();
 
 export default authService;
+
