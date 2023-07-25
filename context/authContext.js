@@ -1,5 +1,7 @@
 import React, { createContext, useReducer, useEffect } from "react";
 import jwtDecode from "jwt-decode";
+import Cookies from 'js-cookie';
+
 
 function authReducer(state, action) {
   switch (action.type) {
@@ -27,8 +29,8 @@ const initialState = {
 };
 
 if (typeof window !== "undefined") {
-  if (localStorage.getItem("jwtToken")) {
-    const decodedToken = jwtDecode(localStorage.getItem("jwtToken"));
+  if (localStorage.getItem('jwtToken')) {
+    const decodedToken = jwtDecode(localStorage.getItem('jwtToken'));
 
     if (decodedToken.exp * 1000 < Date.now()) {
       localStorage.removeItem("jwtToken");
@@ -36,11 +38,11 @@ if (typeof window !== "undefined") {
       initialState.user = {
         id: decodedToken.user_id,
         name: decodedToken.username,
-        token: localStorage.getItem("jwtToken")
-      };
-      
+        token: localStorage.getItem('jwtToken')
+      };   
     }
   }
+
 }
 
 const AuthContext = createContext({

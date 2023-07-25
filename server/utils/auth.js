@@ -1,6 +1,7 @@
 import decode from "jwt-decode";
 import jwt from "jsonwebtoken";
 
+
 const JWT_SECRET = process.env.JWT_SECRET;
 
 class AuthService {
@@ -26,7 +27,7 @@ class AuthService {
 
   getToken() {
     if (typeof window !== "undefined") {
-      return localStorage.getItem("jwtToken");
+      return localStorage.getItem('jwtToken');
     }
     return null;
   }

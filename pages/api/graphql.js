@@ -41,6 +41,8 @@ apiRoute.all(async function handler(req, res, next) {
   // verify and attach user to req object
   if (req.headers) {
     const token = req.headers.authorization ? req.headers.authorization.split(" ").pop() : "";
+    console.log("Authorization header:", req.headers.authorization);
+    console.log("Token:", token);  
     req.user = await AuthService.verifyToken(token);
   }
 
@@ -59,8 +61,13 @@ apiRoute.all(async function handler(req, res) {
       query: body.query,
       variables: body.variables,
       operationName: body.operationName,
-      context: { req },
+      context: {
+        ...req,
+        user: req.user
+      },
     });
+    
+    
 
     console.log("Operation response:", response);
 

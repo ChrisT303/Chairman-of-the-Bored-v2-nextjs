@@ -50,10 +50,18 @@ const BoredApi = ({ userPreferences = defaultUserPreferences }) => {
   const saveActivityHandler = async (activity) => {
     const userId = user.id;
   
+    // Transform activity object to match the format expected by the GraphQL mutation
+    const transformedActivity = {
+      activity: activity.activity,
+      type: activity.type,
+      participants: activity.participants,
+      price: activity.price,
+    };
+    
     const { data } = await saveActivity({
       variables: {
         userId,
-        activity,
+        activity: transformedActivity,  // Use the transformed activity object here
       },
     });
   
@@ -63,6 +71,7 @@ const BoredApi = ({ userPreferences = defaultUserPreferences }) => {
       console.log("Failed to save activity");
     }
   };
+  
   
 
 

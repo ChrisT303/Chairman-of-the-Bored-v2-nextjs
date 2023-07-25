@@ -2,6 +2,7 @@ const { User } = require("../models");
 const { Activity } = require("../models");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { AuthenticationError } = require('apollo-server-errors');
 
 require("dotenv").config();
 
@@ -103,18 +104,14 @@ const resolvers = {
 
       return user;
     },
-    async saveActivity(_, { activityId }, context) {
-      
-      console.log("Context in saveActivity:", context);
-
-      // first, ensure user is authenticated
-      const { user } = context.req; // use user from context instead of userId from input
-      if (!user) {
-        throw new Error("Authentication required to save activity");
+  
+    saveActivity: async (_parent, { activityId }, context, _info) => {
+      if (!context.user) {
+        throw new AuthenticationError("Authentication required to save activity");
       }
 
       // check if the user exists
-      const userFromDb = await User.findById(user._id); // use user._id from context instead of userId from input
+      const userFromDb = await User.findById(context.user._id); // use user._id from context instead of userId from input
       if (!userFromDb) {
         throw new Error("User not found");
       }
@@ -142,4 +139,5 @@ const resolvers = {
 };
 
 module.exports = resolvers;
+
 

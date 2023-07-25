@@ -11,43 +11,53 @@ import "../styles/globals.css";
 import "tailwindcss/tailwind.css";
 import { setContext } from "@apollo/client/link/context";
 import Navbar from "../components/NavBar";
+import Cookies from 'js-cookie';
 import { onError } from "@apollo/client/link/error";
 import { AuthProvider } from "../context/authContext";
 import { useRouter } from "next/router";
 
 const httpLink = new HttpLink({
   uri: "/api/graphql",
-  headers: {
-    "Content-Type": "application/json",
-  },
+  credentials: 'include',
 });
+
 
 const requestLogger = new ApolloLink((operation, forward) => {
   console.log("Request:", operation);
+
+  let headers = operation.getContext().headers;
+  console.log("Headers:", headers);
+
+  let token;
+  if (headers) {
+    token = headers.authorization;
+  }
+
+  console.log(`Extracted token: ${token}`);
+
   return forward(operation);
 });
 
 const authLink = setContext((_, { headers }) => {
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("jwtToken") : null;
+  // get the authentication token from local storage if it exists
+  const token = Cookies.get('jwtToken');
 
-  if (token) {
-    return {
-      headers: {
-        ...(headers || {}),
-        authorization: `Bearer ${token}`,
-      },
-    };
-  } else {
-    return {
-      headers: {
-        ...(headers || {}),
-      },
-    };
-  }
+  Cookies.set('jwtToken', token);
+  console.log('Token set in cookies:', Cookies.get('jwtToken')); // This should print your token
+  
+
+  // return the headers to the context so httpLink can read them
+  const newHeaders = {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : "",
+    }
+  };
+
+  console.log(`New headers: ${JSON.stringify(newHeaders.headers)}`);
+
+  return newHeaders;
 });
-
-
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors)
@@ -61,7 +71,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 });
 
 const client = new ApolloClient({
-  link: errorLink.concat(authLink.concat(httpLink)),
+  link: ApolloLink.from([requestLogger, errorLink, authLink.concat(httpLink)]),
   cache: new InMemoryCache(),
 });
 
@@ -109,3 +119,4 @@ function MyApp({ Component, pageProps }) {
 }
 
 export default MyApp;
+
