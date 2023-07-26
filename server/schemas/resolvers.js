@@ -49,6 +49,8 @@ const resolvers = {
           expiresIn: "2h",
         }
       );
+      console.log(token);  
+
 
       newUser.token = token;
 
@@ -64,7 +66,7 @@ const resolvers = {
     async loginUser(_, { loginInput: { email, password } }) {
       const user = await User.findOne({ email });
       console.log(user);
-
+    
       if (user && (await bcrypt.compare(password, user.password))) {
         console.log("passwords match");
         const token = jwt.sign(
@@ -74,19 +76,22 @@ const resolvers = {
             expiresIn: "2h",
           }
         );
-
+    
         user.token = token;
-
-        const res = await user;
-        return {
-          id: res.id,
-          username: res.username,
-          ...res._doc,
+    
+        const returnObject = {
+          id: user.id,
+          username: user.username,
+          token: token,  // Include token explicitly
+          ...user._doc,
         };
+        console.log(returnObject);  // Add this
+        return returnObject;
       } else {
         throw new Error("Invalid login credentials", "INVALID_CREDENTIALS");
       }
     },
+    
     async updateUserPreferences(_, { input }) {
       const { id, interest, age, location, skillLevel } = input;
 
@@ -106,35 +111,39 @@ const resolvers = {
     },
   
     saveActivity: async (_parent, { activityId }, context, _info) => {
+      // Log the headers at the start of the resolver
+      console.log(context.headers);
+    
       if (!context.user) {
         throw new AuthenticationError("Authentication required to save activity");
       }
-
+    
       // check if the user exists
       const userFromDb = await User.findById(context.user._id); // use user._id from context instead of userId from input
       if (!userFromDb) {
         throw new Error("User not found");
       }
-
+    
       // check if the activity exists
       const activity = await Activity.findById(activityId);
       if (!activity) {
         throw new Error("Activity not found");
       }
-
+    
       // check if the activity already exists in the user's saved activities
       const isActivityExists = userFromDb.savedActivities.some(
         (savedActivity) => savedActivity.toString() === activityId
       );
-
+    
       // if the activity does not exist in user's saved activities, add it
       if (!isActivityExists) {
         userFromDb.savedActivities.push(activityId);
         await userFromDb.save();
       }
-
+    
       return userFromDb;
     },
+    
   },
 };
 
