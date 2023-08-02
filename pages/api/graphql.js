@@ -44,6 +44,8 @@ apiRoute.all(async function handler(req, res, next) {
     console.log("Authorization header:", req.headers.authorization);
     console.log("Token:", token);  
     req.user = await AuthService.verifyToken(token);
+    console.log("User from token:", req.user); // Log the user extracted from token
+
   }
 
   next();

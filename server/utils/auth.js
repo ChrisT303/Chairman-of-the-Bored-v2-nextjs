@@ -48,20 +48,21 @@ class AuthService {
     return token;
   }
   
-  verifyToken(token) {
-    console.log("Verifying token:", token);
-    if (!token) {
-      return null;
-    }
-    try {
-      const decoded = jwt.verify(token, JWT_SECRET);
-      console.log("Decoded token:", decoded);
-      return decoded.data;
-    } catch (err) {
-      console.log(err);
-      return null;
-    }
+verifyToken(token) {
+  console.log("Verifying token:", token);
+  if (!token) {
+    return null;
   }
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    console.log("Decoded token:", decoded);
+    return decoded; // return the whole decoded token, not just decoded.data
+  } catch (err) {
+    console.error("Token verification error:", err);
+    return null;
+  }
+}
+
 }
 
 const authService = new AuthService();
