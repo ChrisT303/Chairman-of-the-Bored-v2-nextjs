@@ -15,7 +15,7 @@ const requestLoggerPlugin = {
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  plugins: [requestLoggerPlugin], // Add the plugin to the server instance
+  plugins: [requestLoggerPlugin], 
 });
 
 
@@ -71,8 +71,7 @@ apiRoute.all(async function handler(req, res) {
     
     
 
-    console.log("Operation response:", response);
-
+    console.log("GraphQL context:", { ...req, user: req.user });
     return res.json(response);
   } catch (error) {
     console.error("Error in handler:", error);

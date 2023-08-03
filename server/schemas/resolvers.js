@@ -110,39 +110,48 @@ const resolvers = {
       return user;
     },
   
-    saveActivity: async (_parent, { activityId }, context, _info) => {
-      // Log the headers at the start of the resolver
-      console.log(context.headers);
+    saveActivity: async (_, { userId, activity }, context) => {
+      console.log("saveActivity - Context user:", context.user); // Log the user from context
+      console.log("saveActivity - User ID:", userId); // Log the incoming user ID
+      console.log("saveActivity - Activity:", activity); // Log the incoming activity
     
+      // Authentication check
       if (!context.user) {
+        console.log("saveActivity - Authentication failure"); // Log authentication failure
         throw new AuthenticationError("Authentication required to save activity");
       }
     
-      // check if the user exists
-      const userFromDb = await User.findById(context.user._id); // use user._id from context instead of userId from input
+      // Check if the user exists
+      const userFromDb = await User.findById(userId);
+      console.log("saveActivity - User from DB:", userFromDb); // Log the user retrieved from the database
+    
       if (!userFromDb) {
         throw new Error("User not found");
       }
     
-      // check if the activity exists
-      const activity = await Activity.findById(activityId);
-      if (!activity) {
-        throw new Error("Activity not found");
-      }
+      // Create the new activity
+      const newActivity = new Activity(activity);
+      await newActivity.save();
+      console.log("saveActivity - New activity saved:", newActivity); // Log the newly created activity
     
-      // check if the activity already exists in the user's saved activities
+      // Check if the activity already exists in the user's saved activities
       const isActivityExists = userFromDb.savedActivities.some(
-        (savedActivity) => savedActivity.toString() === activityId
+        (savedActivity) => savedActivity.toString() === newActivity.id.toString()
       );
     
-      // if the activity does not exist in user's saved activities, add it
+      console.log("saveActivity - Activity exists in user's saved activities:", isActivityExists); // Log whether activity exists
+    
+      // If the activity does not exist in user's saved activities, add it
       if (!isActivityExists) {
-        userFromDb.savedActivities.push(activityId);
+        userFromDb.savedActivities.push(newActivity);
         await userFromDb.save();
+        console.log("saveActivity - Activity added to user's saved activities:", userFromDb); // Log updated user with saved activities
       }
     
       return userFromDb;
     },
+    
+    
     
   },
 };
