@@ -7,6 +7,7 @@ import nextConnect from "next-connect";
 
 const requestLoggerPlugin = {
   requestDidStart(requestContext) {
+    console.log("Request context is:\n", requestContext.request.context);
     console.log("Request started! Query:\n", requestContext.request.query);
     console.log("Variables:\n", requestContext.request.variables);
   },
@@ -15,9 +16,8 @@ const requestLoggerPlugin = {
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  plugins: [requestLoggerPlugin], 
+  plugins: [requestLoggerPlugin],
 });
-
 
 const playground = expressPlayground({
   endpoint: "/api/graphql",
@@ -30,7 +30,7 @@ apiRoute.all(async function handler(req, res, next) {
     res.end();
     return false;
   }
-  
+
   if (req.method === "GET") {
     return playground(req, res);
   }
@@ -40,12 +40,13 @@ apiRoute.all(async function handler(req, res, next) {
 
   // verify and attach user to req object
   if (req.headers) {
-    const token = req.headers.authorization ? req.headers.authorization.split(" ").pop() : "";
+    const token = req.headers.authorization
+      ? req.headers.authorization.split(" ").pop()
+      : "";
     console.log("Authorization header:", req.headers.authorization);
-    console.log("Token:", token);  
+    console.log("Token:", token);
     req.user = await AuthService.verifyToken(token);
     console.log("User from token:", req.user); // Log the user extracted from token
-
   }
 
   next();
@@ -59,17 +60,24 @@ apiRoute.all(async function handler(req, res) {
     const { method, body } = req;
     console.log("Executing operation:", body.query);
 
-    const response = await server.executeOperation({
-      query: body.query,
-      variables: body.variables,
-      operationName: body.operationName,
-      context: {
-        ...req,
-        user: req.user
+    const response = await server.executeOperation(
+      {
+        query: body.query,
+        variables: body.variables,
+        operationName: body.operationName,
+        context: {
+          ...req,
+          user: req.user,
+        },
       },
-    });
-    
-    
+      {
+        contextValue: {
+          ...req,
+          user: req.user,
+          userId: "test",
+        },
+      }
+    );
 
     console.log("GraphQL context:", { ...req, user: req.user });
     return res.json(response);
@@ -86,9 +94,3 @@ export const config = {
     bodyParser: true,
   },
 };
-
-
-
-
-
-

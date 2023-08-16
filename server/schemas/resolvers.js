@@ -2,7 +2,7 @@ const { User } = require("../models");
 const { Activity } = require("../models");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { AuthenticationError } = require('apollo-server-errors');
+const { AuthenticationError } = require("apollo-server-errors");
 
 require("dotenv").config();
 
@@ -49,8 +49,7 @@ const resolvers = {
           expiresIn: "2h",
         }
       );
-      console.log(token);  
-
+      console.log(token);
 
       newUser.token = token;
 
@@ -66,7 +65,7 @@ const resolvers = {
     async loginUser(_, { loginInput: { email, password } }) {
       const user = await User.findOne({ email });
       console.log(user);
-    
+
       if (user && (await bcrypt.compare(password, user.password))) {
         console.log("passwords match");
         const token = jwt.sign(
@@ -76,22 +75,22 @@ const resolvers = {
             expiresIn: "2h",
           }
         );
-    
+
         user.token = token;
-    
+
         const returnObject = {
           id: user.id,
           username: user.username,
-          token: token,  // Include token explicitly
+          token: token, // Include token explicitly
           ...user._doc,
         };
-        console.log(returnObject);  // Add this
+        console.log(returnObject); // Add this
         return returnObject;
       } else {
         throw new Error("Invalid login credentials", "INVALID_CREDENTIALS");
       }
     },
-    
+
     async updateUserPreferences(_, { input }) {
       const { id, interest, age, location, skillLevel } = input;
 
@@ -109,53 +108,58 @@ const resolvers = {
 
       return user;
     },
-  
-    saveActivity: async (_, { userId, activity }, context) => {
+
+    saveActivity: async (_, { userId, activity }, context, contextValue) => {
+      console.log("saveActivity - ContextValue:", context); // Log the context
       console.log("saveActivity - Context user:", context.user); // Log the user from context
       console.log("saveActivity - User ID:", userId); // Log the incoming user ID
       console.log("saveActivity - Activity:", activity); // Log the incoming activity
-    
+
       // Authentication check
       if (!context.user) {
         console.log("saveActivity - Authentication failure"); // Log authentication failure
-        throw new AuthenticationError("Authentication required to save activity");
+        throw new AuthenticationError(
+          "Authentication required to save activity"
+        );
       }
-    
+
       // Check if the user exists
       const userFromDb = await User.findById(userId);
       console.log("saveActivity - User from DB:", userFromDb); // Log the user retrieved from the database
-    
+
       if (!userFromDb) {
         throw new Error("User not found");
       }
-    
+
       // Create the new activity
       const newActivity = new Activity(activity);
       await newActivity.save();
       console.log("saveActivity - New activity saved:", newActivity); // Log the newly created activity
-    
+
       // Check if the activity already exists in the user's saved activities
       const isActivityExists = userFromDb.savedActivities.some(
-        (savedActivity) => savedActivity.toString() === newActivity.id.toString()
+        (savedActivity) =>
+          savedActivity.toString() === newActivity.id.toString()
       );
-    
-      console.log("saveActivity - Activity exists in user's saved activities:", isActivityExists); // Log whether activity exists
-    
+
+      console.log(
+        "saveActivity - Activity exists in user's saved activities:",
+        isActivityExists
+      ); // Log whether activity exists
+
       // If the activity does not exist in user's saved activities, add it
       if (!isActivityExists) {
         userFromDb.savedActivities.push(newActivity);
         await userFromDb.save();
-        console.log("saveActivity - Activity added to user's saved activities:", userFromDb); // Log updated user with saved activities
+        console.log(
+          "saveActivity - Activity added to user's saved activities:",
+          userFromDb
+        ); // Log updated user with saved activities
       }
-    
+
       return userFromDb;
     },
-    
-    
-    
   },
 };
 
 module.exports = resolvers;
-
-
