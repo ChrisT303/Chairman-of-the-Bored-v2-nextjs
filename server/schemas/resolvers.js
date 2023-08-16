@@ -1,5 +1,5 @@
 const { User } = require("../models");
-const { Activity } = require("../models");
+const { SavedActivity: Activity } = require("../models");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { AuthenticationError } = require("apollo-server-errors");
@@ -114,7 +114,10 @@ const resolvers = {
       console.log("saveActivity - Context user:", context.user); // Log the user from context
       console.log("saveActivity - User ID:", userId); // Log the incoming user ID
       console.log("saveActivity - Activity:", activity); // Log the incoming activity
-
+      const enrichedActivity = {
+        title: activity.activity,
+        description: `Activity of type ${activity.type} with ${activity.participants} participants and price ${activity.price}`,
+      };
       // Authentication check
       if (!context.user) {
         console.log("saveActivity - Authentication failure"); // Log authentication failure
@@ -132,7 +135,7 @@ const resolvers = {
       }
 
       // Create the new activity
-      const newActivity = new Activity(activity);
+      const newActivity = new Activity(enrichedActivity);
       await newActivity.save();
       console.log("saveActivity - New activity saved:", newActivity); // Log the newly created activity
 
@@ -157,7 +160,10 @@ const resolvers = {
         ); // Log updated user with saved activities
       }
 
-      return userFromDb;
+      return {
+        ...userFromDb,
+        id: userFromDb._id,
+      };
     },
   },
 };
