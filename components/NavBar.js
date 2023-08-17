@@ -5,6 +5,7 @@ import { HiChevronDoubleDown, HiXCircle } from "react-icons/hi";
 import { FcBusinessman } from "react-icons/fc";
 import LoginModal from "./LoginModal";
 import RegisterModal from "./RegisterModal";
+import { useRouter } from 'next/router'; 
 
 const NavBar = () => {
   const [active, setActive] = useState(false);
@@ -13,6 +14,8 @@ const NavBar = () => {
   const { user, logout } = useContext(AuthContext);
 
   const [authReady, setAuthReady] = useState(false);
+
+  const router = useRouter();
 
   useEffect(() => {
     setAuthReady(true);
@@ -30,6 +33,7 @@ const NavBar = () => {
 
   const userLogout = () => {
     logout();
+    router.push('/');
   };
 
   return (
