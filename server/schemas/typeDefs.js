@@ -47,7 +47,7 @@ const typeDefs = gql`
     updateUserPreferences(input: UserPreferenceInput!): User
     saveActivity(userId: ID!, activity: ActivityInput!): User
   }
-  
+
   input ActivityInput {
     activity: String!
     type: String!
@@ -57,22 +57,19 @@ const typeDefs = gql`
     key: String
     accessibility: Float
   }
-  
-  
+
   type SavedActivity {
     id: ID!
     userId: ID!
     activity: Activity!
   }
-  
+
   type Activity {
     activity: String!
     type: String!
     participants: Int!
     price: Float!
   }
-  
 `;
 
 module.exports = typeDefs;
-

@@ -20,30 +20,21 @@ const resolvers = {
       return await User.findById(user._id);
     },
     getUserPreferences: async (_, { id }) => await User.findById(id),
-    getUserSavedActivities: {
-      resolve: async (_, { userId }) => {
-        console.log("Received User ID in Resolver:", userId); // Logging user ID for debug
-        const user = await User.findById(userId).populate("savedActivities");
-        console.log("User Data Fetched from DB:", user); // Logging user data for debug
-
-        if (!user) {
-          throw new Error("User not found");
-        }
-
-        return user.savedActivities.map((activity) => ({
-          ...activity,
-          id: activity._id.toString(),
-          userId: user._id.toString(),
-          activity: {
-            activity: activity.description,
-            type: activity.title,
-            participants: 1,
-            price: 23.03,
-          },
-        }));
-      },
+  },
+  getUserSavedActivities: {
+    resolve: async (_, { userId }) => {
+      console.log('Received User ID in Resolver:', userId); // Logging user ID for debug
+      const user = await User.findById(userId).populate('savedActivities');
+      console.log('User Data Fetched from DB:', user); // Logging user data for debug
+      
+      if (!user) {
+        throw new Error('User not found');
+      }
+      
+      return user.savedActivities;
     },
   },
+
 
   Mutation: {
     async registerUser(_, { registerInput: { username, email, password } }) {

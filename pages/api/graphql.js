@@ -17,14 +17,6 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   plugins: [requestLoggerPlugin],
-  context: async () => {
-    try {
-      await dbConnect();
-      console.log("Connecting to database...");
-    } catch (error) {
-      console.error("Error in handler:", error);
-    }
-  },
 });
 
 const playground = expressPlayground({
@@ -95,6 +87,16 @@ const playground = expressPlayground({
 //   }
 // });
 
+const onAppStart = async () => {
+  try {
+    await dbConnect();
+    console.log("Connecting to database...");
+  } catch (error) {
+    console.error("Error in handler:", error);
+  }
+};
+
+onAppStart();
 
 const validateUser = (fn) => async (req, res) => {
   if (req.method === "OPTIONS") {
