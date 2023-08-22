@@ -14,3 +14,23 @@
     color: red;
     font-weight: bold;
   }
+
+  .retro-btn {
+    border: 3px solid rgba(0, 0, 0, 0.3);
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
+    transition: all 0.2s;
+  }
+  
+  .retro-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.1);
+  }
+  
+  .awaiting-adventure {
+    border: 3px dotted rgba(0, 0, 0, 0.2);
+    background-color: rgba(240, 240, 240, 0.7); 
+}
+
+.awaiting-adventure h2 {
+    color: rgba(0, 0, 0, 0.6);
+}

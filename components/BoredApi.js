@@ -1,10 +1,7 @@
 import React, { useState, useContext } from "react";
-import { useMutation } from "@apollo/react-hooks"; 
+import { useMutation } from "@apollo/react-hooks";
 import { SAVE_ACTIVITY } from "../server/utils/mutations";
 import { AuthContext } from "../context/authContext";
-
-
-
 
 const defaultUserPreferences = {
   interest: ["recreational", "social", "diy"],
@@ -15,7 +12,6 @@ const BoredApi = ({ userPreferences = defaultUserPreferences }) => {
   const [activity, setActivity] = useState({});
   const [saveActivity] = useMutation(SAVE_ACTIVITY);
   const { user } = useContext(AuthContext);
-
 
   const SearchApi = async () => {
     // If userPreferences is undefined, use the defaultUserPreferences
@@ -49,7 +45,7 @@ const BoredApi = ({ userPreferences = defaultUserPreferences }) => {
 
   const saveActivityHandler = async (activity) => {
     const userId = user.id;
-  
+
     // Transform activity object to match the format expected by the GraphQL mutation
     const transformedActivity = {
       activity: activity.activity,
@@ -57,56 +53,59 @@ const BoredApi = ({ userPreferences = defaultUserPreferences }) => {
       participants: activity.participants,
       price: activity.price,
     };
-    
+
     const { data } = await saveActivity({
       variables: {
         userId,
-        activity: transformedActivity,  // Use the transformed activity object here
+        activity: transformedActivity, // Use the transformed activity object here
       },
     });
-  
+
     if (data) {
       console.log("Activity saved successfully");
     } else {
       console.log("Failed to save activity");
     }
   };
-  
-  
-
 
   return (
     <div className="flex flex-col items-center justify-start pt-10 h-screen">
-      <div className="bg-white bg-opacity-70 shadow-lg rounded-lg p-6 mb-8">
-        {activity.activity && (
-          <div className="text-center">
+      <div
+        className={`bg-white bg-opacity-70 shadow-lg rounded-lg p-6 mb-8 text-center ${
+          !activity.activity && "awaiting-adventure"
+        }`}
+      >
+        {activity.activity ? (
+          <>
             <h2 className="text-2xl font-bold">{activity.activity}</h2>
             <p>Type: {activity.type}</p>
             <p>Participants: {activity.participants}</p>
             <p>Price: {activity.price}</p>
-          </div>
+          </>
+        ) : (
+          <>
+          <h2 className="text-2xl font-bold">Awaiting Adventure!</h2>
+          <p>Click &quot;Tell me what to do!&quot; to get started.</p>
+      </>
+      
         )}
       </div>
       <button
         onClick={SearchApi}
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        className="retro-btn bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
       >
         Tell me what to do!
       </button>
       {user && (
         <button
           onClick={() => saveActivityHandler(activity)}
-          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded ml-2 mt-2"
+          className="retro-btn bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded ml-2 mt-2"
         >
           Save this activity
         </button>
       )}
     </div>
   );
-  
-  
-  
-
 };
 
 export default BoredApi;
