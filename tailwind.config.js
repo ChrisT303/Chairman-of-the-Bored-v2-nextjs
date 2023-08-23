@@ -7,6 +7,7 @@ module.exports = {
         'about': "url('/about-background.jpg')",
         'leaderboard': "url('/leaderboard.jpg')",
         'girl': "url('/bored-girl.png')",
+        'woman': "url('/businessWoman.png')",
       },
     },
   },

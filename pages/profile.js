@@ -78,58 +78,57 @@ const Profile = () => {
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="mx-auto p-4 bg-woman bg-cover bg-center">
+    <div className="container mx-auto">
       <h1 className="text-2xl mb-4">Edit Profile</h1>
+      
       <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label className="block mb-2">Interest</label>
-          <Select
-            isMulti
-            value={interest}
-            onChange={handleInterestChange}
-            options={options}
-            className="w-full p-2 border border-gray-300 rounded"
-            classNamePrefix="select"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block mb-2">Age</label>
-          <input
-            type="number"
-            value={age}
-            onChange={(e) => setAge(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block mb-2">Location</label>
-          <input
-            type="text"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block mb-2">Skill Level</label>
-          <select
-            value={skillLevel}
-            onChange={(e) => setSkillLevel(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded"
-          >
-            <option value="">Select skill level</option>
-            <option value="beginner">Beginner</option>
-            <option value="intermediate">Intermediate</option>
-            <option value="advanced">Advanced</option>
-          </select>
-        </div>
+      <div className="mb-4">
+  <label className="block mb-2 retro-text">Interest</label>
+  <Select
+    isMulti
+    value={interest}
+    onChange={handleInterestChange}
+    options={options}
+    className="w-full p-2 retro-border rounded"
+    classNamePrefix="select"
+  />
+</div>
+<div className="mb-4">
+  <label className="block mb-2 retro-text">Age</label>
+  <input
+    type="number"
+    value={age}
+    onChange={(e) => setAge(e.target.value)}
+    className="w-full p-2 retro-border rounded"
+  />
+</div>
+<div className="mb-4">
+  <label className="block mb-2 retro-text">Location</label>
+  <input
+    type="text"
+    value={location}
+    onChange={(e) => setLocation(e.target.value)}
+    className="w-full p-2 retro-border rounded"
+  />
+</div>
+<div className="mb-4">
+  <label className="block mb-2 retro-text">Skill Level</label>
+  <select
+    value={skillLevel}
+    onChange={(e) => setSkillLevel(e.target.value)}
+    className="w-full p-2 retro-border rounded"
+  >
+    {/* ... */}
+  </select>
+</div>
         {successMessage && (
           <p className="text-green-600 mb-4">{successMessage}</p>
         )}
         {errorMessage && <p className="text-red-600 mb-4">{errorMessage}</p>}
         <button
           type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded"
+          className= "bg-blue-500 retro-btn text-white px-4 py-2 rounded"
         >
           Update Profile
         </button>
@@ -140,6 +139,7 @@ const Profile = () => {
           <ActivityCard key={savedActivity.id} savedActivity={savedActivity} />
         ))}
       </div>
+    </div>
     </div>
   );
 };
