@@ -2,7 +2,6 @@ import React, { useContext } from "react";
 import Greeting from "../components/Greeting";
 import BoredApi from "../components/BoredApi";
 import Results from "../components/Results";
-import LeaderBoard from "../components/LeaderBoard";
 import { AuthContext } from "../context/authContext";
 import { useQuery } from '@apollo/react-hooks';
 import { GET_USER_PREFERENCES } from '../server/utils/queries';

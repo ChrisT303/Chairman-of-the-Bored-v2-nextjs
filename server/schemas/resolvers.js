@@ -31,7 +31,7 @@ const resolvers = {
         }
 
         return user.savedActivities.map((activity) => ({
-          ...activity,
+          ...activity._doc,
           id: activity._id.toString(),
           userId: user._id.toString(),
           activity: {
