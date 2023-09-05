@@ -1,6 +1,6 @@
 import React from 'react'
 
-const ActivityCard = ({ savedActivity }) => {
+const ActivityCard = ({ savedActivity, onDelete}) => {
     return (
       <div className="retro-border rounded-lg overflow-hidden shadow-lg m-2 p-4 bg-retro-background flex justify-between items-start">
         <div>
@@ -11,7 +11,8 @@ const ActivityCard = ({ savedActivity }) => {
         </div>
         <div className="flex flex-col space-y-2">
           <button className="retro-btn bg-green-500 px-4 py-2">Complete</button>
-          <button className="retro-btn bg-red-500 px-4 py-2">Delete</button>
+          <button className="retro-btn bg-red-500 px-4 py-2" onClick={() => onDelete(savedActivity.id)}
+>Delete</button>
         </div>
       </div>
     );

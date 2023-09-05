@@ -46,9 +46,27 @@ export const SAVE_ACTIVITY = gql`
           price
         }
       }
+    }  
+  }
+`;
+
+export const DELETE_ACTIVITY = gql`
+  mutation DeleteActivity($activityId: ID!) {
+    deleteActivity(activityId: $activityId) {
+      id
+      savedActivities {
+        id
+        activity {
+          activity
+          type
+          participants
+          price
+        }
+      }
     }
   }
 `;
+
 
 
 

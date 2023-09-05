@@ -189,6 +189,31 @@ const resolvers = {
         id: userFromDb._id,
       };
     },
+
+    async deleteActivity(_, { activityId }) {
+      const activity = await Activity.findById(activityId);
+      if (!activity) {
+        throw new Error('Activity not found');
+      }
+      const user = await User.findOne({ savedActivities: activityId });
+      if (!user) {
+        throw new Error('User not found');
+      }
+  
+      // Removing the activity from user's savedActivities
+      user.savedActivities = user.savedActivities.filter(
+        (savedActivity) => savedActivity.toString() !== activityId.toString()
+      );
+      await user.save();
+  
+      // Deleting the activity
+      await Activity.findByIdAndDelete(activityId);
+       return {
+    ...user._doc,
+    id: user._id.toString()
+  };
+
+    },
   },
 };
 

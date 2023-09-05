@@ -46,6 +46,8 @@ const typeDefs = gql`
     loginUser(loginInput: LoginInput!): User
     updateUserPreferences(input: UserPreferenceInput!): User
     saveActivity(userId: ID!, activity: ActivityInput!): User
+    deleteActivity(activityId: ID!): User
+
   }
 
   input ActivityInput {

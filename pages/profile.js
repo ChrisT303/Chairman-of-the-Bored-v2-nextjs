@@ -3,6 +3,8 @@ import { useMutation, useQuery } from "@apollo/react-hooks";
 import { AuthContext } from "../context/authContext";
 import { UPDATE_USER_PREFERENCES } from "../server/utils/mutations";
 import { GET_USER_SAVED_ACTIVITIES } from "../server/utils/queries";
+import { DELETE_ACTIVITY } from "../server/utils/mutations";
+
 import ActivityCard from "../components/ActivityCard";
 import Select from "react-select";
 
@@ -77,6 +79,17 @@ const Profile = () => {
     });
   };
 
+  const [deleteActivity, { loading: deleteLoading }] = useMutation(
+    DELETE_ACTIVITY,
+    {
+      refetchQueries: [{ query: GET_USER_SAVED_ACTIVITIES, variables: { userId: user?.id } }],
+      onError: (error) => {
+        console.error("Failed to delete activity:", error);
+      },
+    }
+  );
+  
+
   return (
     <div className="mx-auto p-4 bg-woman bg-cover bg-center">
     <div className="container mx-auto">
@@ -136,11 +149,18 @@ const Profile = () => {
       <div className="mt-10">
         <h2 className="text-2xl mb-4">Saved Activities</h2>
         {savedActivitiesData?.getUserSavedActivities?.map((savedActivity) => (
-          <ActivityCard key={savedActivity.id} savedActivity={savedActivity} />
+          <ActivityCard
+          key={savedActivity.id}
+          savedActivity={savedActivity}
+          onDelete={async (activityId) => {
+            await deleteActivity({ variables: { activityId } });
+          }}
+        />
+        
         ))}
       </div>
     </div>
-    </div>
+    </div> 
   );
 };
 
