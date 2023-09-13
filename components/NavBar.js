@@ -5,7 +5,7 @@ import { HiChevronDoubleDown, HiXCircle } from "react-icons/hi";
 import { FcBusinessman } from "react-icons/fc";
 import LoginModal from "./LoginModal";
 import RegisterModal from "./RegisterModal";
-import { useRouter } from 'next/router'; 
+import { useRouter } from "next/router";
 
 const NavBar = () => {
   const [active, setActive] = useState(false);
@@ -33,7 +33,7 @@ const NavBar = () => {
 
   const userLogout = () => {
     logout();
-    router.push('/');
+    router.push("/");
   };
 
   return (
@@ -98,7 +98,6 @@ const NavBar = () => {
         >
           {!active ? <HiChevronDoubleDown /> : <HiXCircle />}
         </div>
-
         <div
           className={
             !active
@@ -106,6 +105,10 @@ const NavBar = () => {
               : "w-full h-screen main flex flex-col md:hidden justify-center items-center bg-girl bg-cover bg-no-repeat bg-center md:bg-none text-black absolute inset-0 z-30"
           }
         >
+          <HiXCircle
+            className="absolute top-4 right-4 text-4xl cursor-pointer z-40"
+            onClick={onClick}
+          />
           <ul className="flex flex-col items-center">
             <li className="py-6 text-4xl hover:text-sky-400" onClick={onClick}>
               <Link href="/">
