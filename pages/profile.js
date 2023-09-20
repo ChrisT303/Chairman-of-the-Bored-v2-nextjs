@@ -91,7 +91,7 @@ const Profile = () => {
   
 
   return (
-    <div className="mx-auto p-4 bg-woman bg-cover bg-center">
+<div className="mx-auto p-4 bg-woman bg-cover bg-center min-h-screen">
     <div className="container mx-auto">
       <h1 className="text-2xl mb-4">Edit Profile</h1>
       
@@ -146,19 +146,27 @@ const Profile = () => {
           Update Profile
         </button>
       </form>
-      <div className="mt-10">
-        <h2 className="text-2xl mb-4">Saved Activities</h2>
-        {savedActivitiesData?.getUserSavedActivities?.map((savedActivity) => (
-          <ActivityCard
-          key={savedActivity.id}
-          savedActivity={savedActivity}
-          onDelete={async (activityId) => {
-            await deleteActivity({ variables: { activityId } });
-          }}
-        />
-        
-        ))}
-      </div>
+      ...
+<div className="mt-10">
+  <h2 className="text-2xl mb-4">Saved Activities</h2>
+  {savedActivitiesData?.getUserSavedActivities?.length ? (
+    savedActivitiesData.getUserSavedActivities.map((savedActivity) => (
+      <ActivityCard
+        key={savedActivity.id}
+        savedActivity={savedActivity}
+        onDelete={async (activityId) => {
+          await deleteActivity({ variables: { activityId } });
+        }}
+      />
+    ))
+  ) : (
+    <div className="h-full flex items-center justify-center">
+      <p className="text-2xl">No Activities Saved Yet</p>
+    </div>
+  )}
+</div>
+...
+
     </div>
     </div> 
   );

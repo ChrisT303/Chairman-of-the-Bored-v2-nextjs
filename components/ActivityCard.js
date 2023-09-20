@@ -4,8 +4,8 @@ const ActivityCard = ({ savedActivity, onDelete}) => {
     return (
       <div className="retro-border rounded-lg overflow-hidden shadow-lg m-2 p-4 bg-retro-background flex justify-between items-start">
         <div>
-          <h3 className="font-bold text-xl mb-2 retro-text">{savedActivity.activity.activity}</h3>
-          <p className="retro-text">Type: {savedActivity.activity.type}</p>
+          {/* <h3 className="font-bold text-xl mb-2 retro-text">{savedActivity.activity.activity}</h3> */}
+          <h3 className="font-bold text-xl mb-2 retro-text">{savedActivity.activity.type}</h3>
           <p className="retro-text">Participants: {savedActivity.activity.participants}</p>
           <p className="retro-text">Price: {savedActivity.activity.price}</p>
         </div>
