@@ -9,6 +9,7 @@ const typeDefs = gql`
     token: String
     interest: String
     age: Int
+    points: Int!
     location: String
     skillLevel: String
     savedActivities: [SavedActivity]
@@ -38,6 +39,7 @@ const typeDefs = gql`
     user(id: ID!): User
     authenticatedUser: User
     getUserPreferences(id: ID!): User
+    getTopUsers: [User]
     getUserSavedActivities(userId: ID!): [SavedActivity]
   }
 
@@ -46,6 +48,7 @@ const typeDefs = gql`
     loginUser(loginInput: LoginInput!): User
     updateUserPreferences(input: UserPreferenceInput!): User
     saveActivity(userId: ID!, activity: ActivityInput!): User
+    incrementUserPoints(userId: ID!): User
     deleteActivity(activityId: ID!): User
 
   }

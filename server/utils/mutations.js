@@ -67,6 +67,16 @@ export const DELETE_ACTIVITY = gql`
   }
 `;
 
+export const INCREMENT_USER_POINTS = gql`
+  mutation IncrementUserPoints($userId: ID!) {
+    incrementUserPoints(userId: $userId) {
+      id
+      points
+    }
+  }
+`;
+
+
 
 
 

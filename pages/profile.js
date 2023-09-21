@@ -3,6 +3,7 @@ import { useMutation, useQuery } from "@apollo/react-hooks";
 import { AuthContext } from "../context/authContext";
 import { UPDATE_USER_PREFERENCES } from "../server/utils/mutations";
 import { GET_USER_SAVED_ACTIVITIES } from "../server/utils/queries";
+import { INCREMENT_USER_POINTS } from "../server/utils/mutations";
 import { DELETE_ACTIVITY } from "../server/utils/mutations";
 
 import ActivityCard from "../components/ActivityCard";
@@ -82,93 +83,101 @@ const Profile = () => {
   const [deleteActivity, { loading: deleteLoading }] = useMutation(
     DELETE_ACTIVITY,
     {
-      refetchQueries: [{ query: GET_USER_SAVED_ACTIVITIES, variables: { userId: user?.id } }],
+      refetchQueries: [
+        { query: GET_USER_SAVED_ACTIVITIES, variables: { userId: user?.id } },
+      ],
       onError: (error) => {
         console.error("Failed to delete activity:", error);
       },
     }
   );
-  
+
+  const [awardPoints] = useMutation(INCREMENT_USER_POINTS);
+
+  const handleCompletion = async (activityId) => {
+    await awardPoints({ variables: { userId: user?.id, points: 10 } });
+
+    await deleteActivity({ variables: { activityId } });
+  };
 
   return (
-<div className="mx-auto p-4 bg-woman bg-cover bg-center min-h-screen">
-    <div className="container mx-auto">
-      <h1 className="text-2xl mb-4">Edit Profile</h1>
-      
-      <form onSubmit={handleSubmit}>
-      <div className="mb-4">
-  <label className="block mb-2 retro-text">Interest</label>
-  <Select
-    isMulti
-    value={interest}
-    onChange={handleInterestChange}
-    options={options}
-    className="w-full p-2 retro-border rounded"
-    classNamePrefix="select"
-  />
-</div>
-<div className="mb-4">
-  <label className="block mb-2 retro-text">Age</label>
-  <input
-    type="number"
-    value={age}
-    onChange={(e) => setAge(e.target.value)}
-    className="w-full p-2 retro-border rounded"
-  />
-</div>
-<div className="mb-4">
-  <label className="block mb-2 retro-text">Location</label>
-  <input
-    type="text"
-    value={location}
-    onChange={(e) => setLocation(e.target.value)}
-    className="w-full p-2 retro-border rounded"
-  />
-</div>
-<div className="mb-4">
-  <label className="block mb-2 retro-text">Skill Level</label>
-  <select
-    value={skillLevel}
-    onChange={(e) => setSkillLevel(e.target.value)}
-    className="w-full p-2 retro-border rounded"
-  >
-    {/* ... */}
-  </select>
-</div>
-        {successMessage && (
-          <p className="text-green-600 mb-4">{successMessage}</p>
-        )}
-        {errorMessage && <p className="text-red-600 mb-4">{errorMessage}</p>}
-        <button
-          type="submit"
-          className= "bg-blue-500 retro-btn text-white px-4 py-2 rounded"
-        >
-          Update Profile
-        </button>
-      </form>
-      ...
-<div className="mt-10">
-  <h2 className="text-2xl mb-4">Saved Activities</h2>
-  {savedActivitiesData?.getUserSavedActivities?.length ? (
-    savedActivitiesData.getUserSavedActivities.map((savedActivity) => (
-      <ActivityCard
-        key={savedActivity.id}
-        savedActivity={savedActivity}
-        onDelete={async (activityId) => {
-          await deleteActivity({ variables: { activityId } });
-        }}
-      />
-    ))
-  ) : (
-    <div className="h-full flex items-center justify-center">
-      <p className="text-2xl">No Activities Saved Yet</p>
+    <div className="mx-auto p-4 bg-woman bg-cover bg-center min-h-screen">
+      <div className="container mx-auto">
+        <h1 className="text-2xl mb-4">Edit Profile</h1>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label className="block mb-2 retro-text">Interest</label>
+            <Select
+              isMulti
+              value={interest}
+              onChange={handleInterestChange}
+              options={options}
+              className="w-full p-2 retro-border rounded"
+              classNamePrefix="select"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block mb-2 retro-text">Age</label>
+            <input
+              type="number"
+              value={age}
+              onChange={(e) => setAge(e.target.value)}
+              className="w-full p-2 retro-border rounded"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block mb-2 retro-text">Location</label>
+            <input
+              type="text"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              className="w-full p-2 retro-border rounded"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block mb-2 retro-text">Skill Level</label>
+            <select
+              value={skillLevel}
+              onChange={(e) => setSkillLevel(e.target.value)}
+              className="w-full p-2 retro-border rounded"
+            >
+              {/* ... */}
+            </select>
+          </div>
+          {successMessage && (
+            <p className="text-green-600 mb-4">{successMessage}</p>
+          )}
+          {errorMessage && <p className="text-red-600 mb-4">{errorMessage}</p>}
+          <button
+            type="submit"
+            className="bg-blue-500 retro-btn text-white px-4 py-2 rounded"
+          >
+            Update Profile
+          </button>
+        </form>
+        ...
+        <div className="mt-10">
+          <h2 className="text-2xl mb-4">Saved Activities</h2>
+          {savedActivitiesData?.getUserSavedActivities?.length ? (
+            savedActivitiesData.getUserSavedActivities.map((savedActivity) => (
+              <ActivityCard
+                key={savedActivity.id}
+                savedActivity={savedActivity}
+                onDelete={async (activityId) => {
+                  await deleteActivity({ variables: { activityId } });
+                }}
+                onCompletion={handleCompletion}
+              />
+            ))
+          ) : (
+            <div className="h-full flex items-center justify-center">
+              <p className="text-2xl">No Activities Saved Yet</p>
+            </div>
+          )}
+        </div>
+        ...
+      </div>
     </div>
-  )}
-</div>
-...
-
-    </div>
-    </div> 
   );
 };
 

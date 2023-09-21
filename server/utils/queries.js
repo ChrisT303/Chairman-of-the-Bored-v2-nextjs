@@ -36,3 +36,14 @@ export const GET_USER_SAVED_ACTIVITIES = gql`
   }
 `;
 
+export const GET_TOP_USERS = gql`
+  query GetTopUsers {
+    getTopUsers {
+      id
+      username
+      points
+    }
+  }
+`;
+
+
