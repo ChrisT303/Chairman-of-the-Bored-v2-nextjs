@@ -117,7 +117,7 @@ const NavBar = () => {
             </li>
             {authReady && user ? (
               <>
-                <li className="py-6 text-4xl hover:text-sky-400">
+                <li className="py-6 text-4xl hover:text-sky-400" onClick={onClick}>
                   <Link href="/profile">
                     <span>Profile</span>
                   </Link>

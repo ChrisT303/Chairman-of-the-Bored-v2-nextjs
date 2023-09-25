@@ -9,6 +9,10 @@ module.exports = {
         'girl': "url('/bored-girl.png')",
         'woman': "url('/businessWoman.png')",
       },
+      fontFamily: {
+        'retro': ['Press Start 2P', 'system-ui', 'sans-serif'],
+      },
+
     },
   },
   variants: {
