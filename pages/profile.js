@@ -1,10 +1,13 @@
 import React, { useState, useContext } from "react";
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import { AuthContext } from "../context/authContext";
-import { UPDATE_USER_PREFERENCES } from "../server/utils/mutations";
 import { GET_USER_SAVED_ACTIVITIES } from "../server/utils/queries";
-import { INCREMENT_USER_POINTS } from "../server/utils/mutations";
-import { DELETE_ACTIVITY } from "../server/utils/mutations";
+import { 
+  UPDATE_USER_PREFERENCES, 
+  INCREMENT_USER_POINTS, 
+  DELETE_ACTIVITY 
+} from "../server/utils/mutations";
+
 
 import ActivityCard from "../components/ActivityCard";
 import Select from "react-select";
@@ -97,7 +100,6 @@ const Profile = () => {
   const handleCompletion = async (activityId) => {
     await awardPoints({ variables: { userId: user?.id, points: 10 } });
 
-    await deleteActivity({ variables: { activityId } });
   };
 
   return (
