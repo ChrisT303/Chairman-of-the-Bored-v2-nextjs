@@ -45,7 +45,13 @@ const BoredApi = ({ userPreferences = defaultUserPreferences }) => {
 
   const saveActivityHandler = async (activity) => {
     const userId = user.id;
-
+  
+    // Ensure activity.participants is a valid number before saving
+    if (activity.participants === null || activity.participants === undefined) {
+      console.error("Invalid participants value in activity");
+      return;
+    }
+  
     // Transform activity object to match the format expected by the GraphQL mutation
     const transformedActivity = {
       activity: activity.activity,
@@ -53,20 +59,21 @@ const BoredApi = ({ userPreferences = defaultUserPreferences }) => {
       participants: activity.participants,
       price: activity.price,
     };
-
+  
     const { data } = await saveActivity({
       variables: {
         userId,
-        activity: transformedActivity, // Use the transformed activity object here
+        activity: transformedActivity,
       },
     });
-
+  
     if (data) {
       console.log("Activity saved successfully");
     } else {
       console.log("Failed to save activity");
     }
   };
+  
 
   return (
     <div className="flex flex-col items-center justify-start pt-10 h-screen">

@@ -72,8 +72,8 @@ const typeDefs = gql`
   type Activity {
     activity: String!
     type: String!
-    participants: Int!
-    price: Float!
+    participants: Int
+    price: Float
   }
 `;
 

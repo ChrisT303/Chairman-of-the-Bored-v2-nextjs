@@ -37,8 +37,8 @@ const resolvers = {
           activity: {
             activity: activity.description,
             type: activity.title,
-            participants: 1,
-            price: 23.03,
+            participants: activity.participants || 0,
+            price: activity.price,
           },
         }));
       },
@@ -145,6 +145,8 @@ const resolvers = {
       const enrichedActivity = {
         title: activity.activity,
         description: `Activity of type ${activity.type} with ${activity.participants} participants and price ${activity.price}`,
+        participants: activity.participants, 
+        price: activity.price,   
       };
       // Authentication check
       if (!context.user) {
