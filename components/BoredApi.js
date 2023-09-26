@@ -2,6 +2,8 @@ import React, { useState, useContext } from "react";
 import { useMutation } from "@apollo/react-hooks";
 import { SAVE_ACTIVITY } from "../server/utils/mutations";
 import { AuthContext } from "../context/authContext";
+import { formatPrice } from '../server/utils/priceFormatter'; 
+
 
 const defaultUserPreferences = {
   interest: ["recreational", "social", "diy"],
@@ -87,7 +89,7 @@ const BoredApi = ({ userPreferences = defaultUserPreferences }) => {
             <h2 className="text-2xl font-bold">{activity.activity}</h2>
             <p>Type: {activity.type}</p>
             <p>Participants: {activity.participants}</p>
-            <p>Price: {activity.price}</p>
+            <p>Price: {formatPrice(activity.price)}</p>
           </>
         ) : (
           <>
@@ -114,5 +116,7 @@ const BoredApi = ({ userPreferences = defaultUserPreferences }) => {
     </div>
   );
 };
+
+
 
 export default BoredApi;

@@ -1,4 +1,6 @@
 import React from "react";
+import { formatPrice } from '../server/utils/priceFormatter'; 
+
 
 const ActivityCard = ({ savedActivity, onDelete, onCompletion }) => {
   return (
@@ -11,7 +13,7 @@ const ActivityCard = ({ savedActivity, onDelete, onCompletion }) => {
         <p className="retro-text">
           Participants: {savedActivity.activity.participants}
         </p>
-        <p className="retro-text">Price: {savedActivity.activity.price}</p>
+        <p className="retro-text">Price: {formatPrice(savedActivity.activity.price)}</p>
       </div>
       <div className="flex flex-col space-y-2">
         <button
@@ -30,5 +32,7 @@ const ActivityCard = ({ savedActivity, onDelete, onCompletion }) => {
     </div>
   );
 };
+
+
 
 export default ActivityCard;
