@@ -13,7 +13,27 @@ const defaultUserPreferences = {
 
 const BoredApi = ({ userPreferences = defaultUserPreferences }) => {
   const [activity, setActivity] = useState({});
-  const [saveActivity] = useMutation(SAVE_ACTIVITY);
+  const [saveActivity] = useMutation(SAVE_ACTIVITY, {
+    update(cache, { data: { saveActivity } }) {
+      const userId = user.id;
+      const existingActivities = cache.readQuery({
+        query: GET_USER_SAVED_ACTIVITIES,
+        variables: { userId },
+      });
+      
+      const updatedActivities = [...existingActivities.getUserSavedActivities, saveActivity];
+      
+      cache.writeQuery({
+        query: GET_USER_SAVED_ACTIVITIES,
+        variables: { userId },
+        data: {
+          getUserSavedActivities: updatedActivities,
+        },
+      });
+    },
+  });
+  
+  
   const { user } = useContext(AuthContext);
 
   const SearchApi = async () => {

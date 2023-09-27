@@ -228,8 +228,8 @@ const resolvers = {
           // Assuming that 'activity' field in 'SavedActivity' contains the fields like 'activity', 'type', 'participants', 'price'
           activity: {
             activity: sa.activity ? sa.activity.activity : '', 
-            type: sa.activity ? sa.activity.type : '', 
-            participants: sa.activity ? sa.activity.participants : 0, 
+            type: sa.activity ? sa.activity.type : '', // Add proper fallback or error handling
+            participants: sa.activity ? sa.activity.participants : 0, // Add proper fallback or error handling
             price: sa.activity ? sa.activity.price : 0, 
           },
         })),

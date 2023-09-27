@@ -197,45 +197,46 @@ const resolvers = {
     },
 
     async deleteActivity(_, { activityId }) {
-      console.log('Activity Id:', activityId); 
+      console.log('Activity Id:', activityId);
+      
       const activity = await Activity.findById(activityId);
       if (!activity) {
         throw new Error("Activity not found");
       }
+      
       const user = await User.findOne({ savedActivities: activityId });
       if (!user) {
         throw new Error("User not found");
       }
-
+    
       // Removing the activity from user's savedActivities
       user.savedActivities = user.savedActivities.filter(
         (savedActivity) => savedActivity.toString() !== activityId.toString()
       );
-      await user.save();
-
+      
+      await user.save(); // Saving the user after removing the activity
+    
+      // Converting savedActivities ObjectId's to strings
       user.savedActivities = user.savedActivities.map(activity => activity.toString());
-
-      await user.populate('savedActivities')
-
+      
+      // Logging the user object before returning
+      console.log('User object before returning:', {
+        ...user._doc,
+        id: user._id.toString(),
+        savedActivities: user.savedActivities,
+      });
+    
       // Deleting the activity
       await Activity.findByIdAndDelete(activityId);
+      
+      // Returning the user object with converted _id and savedActivities
       return {
         ...user._doc,
         id: user._id.toString(),
-        savedActivities: user.savedActivities.map(sa => ({
-          ...sa._doc,
-          id: sa._id.toString(),
-          // Assuming that 'activity' field in 'SavedActivity' contains the fields like 'activity', 'type', 'participants', 'price'
-          activity: {
-            activity: sa.activity ? sa.activity.activity : '', 
-            type: sa.activity ? sa.activity.type : '', 
-            participants: sa.activity ? sa.activity.participants : 0, 
-            price: sa.activity ? sa.activity.price : 0, 
-          },
-        })),
+        savedActivities: user.savedActivities,
       };
+    }
     
-    },
 
     async incrementUserPoints(_, { userId }) {
       const user = await User.findById(userId);

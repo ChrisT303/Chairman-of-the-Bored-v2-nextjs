@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import { useMutation } from "@apollo/react-hooks";
 import { SAVE_ACTIVITY } from "../server/utils/mutations";
 import { GET_USER_SAVED_ACTIVITIES } from "../server/utils/queries";
+
 import { AuthContext } from "../context/authContext";
 import { formatPrice } from '../server/utils/priceFormatter'; 
 

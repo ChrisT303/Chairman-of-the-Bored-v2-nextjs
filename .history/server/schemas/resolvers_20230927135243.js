@@ -197,7 +197,6 @@ const resolvers = {
     },
 
     async deleteActivity(_, { activityId }) {
-      console.log('Activity Id:', activityId); 
       const activity = await Activity.findById(activityId);
       if (!activity) {
         throw new Error("Activity not found");
@@ -213,28 +212,12 @@ const resolvers = {
       );
       await user.save();
 
-      user.savedActivities = user.savedActivities.map(activity => activity.toString());
-
-      await user.populate('savedActivities')
-
       // Deleting the activity
       await Activity.findByIdAndDelete(activityId);
       return {
         ...user._doc,
         id: user._id.toString(),
-        savedActivities: user.savedActivities.map(sa => ({
-          ...sa._doc,
-          id: sa._id.toString(),
-          // Assuming that 'activity' field in 'SavedActivity' contains the fields like 'activity', 'type', 'participants', 'price'
-          activity: {
-            activity: sa.activity ? sa.activity.activity : '', 
-            type: sa.activity ? sa.activity.type : '', 
-            participants: sa.activity ? sa.activity.participants : 0, 
-            price: sa.activity ? sa.activity.price : 0, 
-          },
-        })),
       };
-    
     },
 
     async incrementUserPoints(_, { userId }) {
