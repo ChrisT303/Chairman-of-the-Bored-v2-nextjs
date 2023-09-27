@@ -13,9 +13,15 @@ const defaultUserPreferences = {
 
 const BoredApi = ({ userPreferences = defaultUserPreferences }) => {
   const [activity, setActivity] = useState({});
-  const [saveActivity] = useMutation(SAVE_ACTIVITY);
   const { user } = useContext(AuthContext);
-
+  const [saveActivity] = useMutation(SAVE_ACTIVITY, {
+    refetchQueries: [
+      {
+        query: GET_USER_SAVED_ACTIVITIES,
+        variables: { userId: user.id },
+      },
+    ],
+  });
   const SearchApi = async () => {
     // If userPreferences is undefined, use the defaultUserPreferences
     const preferences = userPreferences || defaultUserPreferences;
