@@ -18,7 +18,7 @@ const BoredApi = ({ userPreferences = defaultUserPreferences }) => {
     refetchQueries: [
       {
         query: GET_USER_SAVED_ACTIVITIES,
-        variables: { userId: user.id },
+        variables: { userId: user ? user.id : null },
       },
     ],
   });
