@@ -5,7 +5,8 @@ import { GET_USER_SAVED_ACTIVITIES } from "../server/utils/queries";
 import { 
   UPDATE_USER_PREFERENCES, 
   INCREMENT_USER_POINTS, 
-  DELETE_ACTIVITY 
+  DELETE_ACTIVITY,
+  COMPLETE_ACTIVITY
 } from "../server/utils/mutations";
 
 
@@ -37,6 +38,16 @@ const Profile = () => {
     setInterest(selectedOptions);
   };
 
+  const [completeActivity, { loading: completeLoading }] = useMutation(
+    COMPLETE_ACTIVITY,
+    {
+      refetchQueries: [
+        { query: GET_USER_SAVED_ACTIVITIES, variables: { userId: user?.id } },
+      ],
+    }
+  );
+  
+  
   const [updateUserPreferences, { loading: updateLoading }] = useMutation(
     UPDATE_USER_PREFERENCES,
     {
@@ -51,9 +62,13 @@ const Profile = () => {
 
   const { data: savedActivitiesData } = useQuery(GET_USER_SAVED_ACTIVITIES, {
     variables: {
-      userId: user?.id, // assuming user id is stored in auth context when user is logged in
+      userId: user?.id, 
     },
+    fetchPolicy: 'network-only'
+
   });
+  console.log("Fetching saved activities:", savedActivitiesData);
+
 
   console.log("Saved Activities Data:", savedActivitiesData);
 
@@ -98,9 +113,22 @@ const Profile = () => {
   const [awardPoints] = useMutation(INCREMENT_USER_POINTS);
 
   const handleCompletion = async (activityId) => {
-    await awardPoints({ variables: { userId: user?.id, points: 10 } });
-
+    try {
+      
+      await completeActivity({
+        variables: {
+          activityId: activityId
+        }
+      });
+  
+      await awardPoints({ variables: { userId: user?.id } });
+    } catch (error) {
+      console.error("Failed to complete the activity:", error);
+    }
   };
+  
+
+
 
   return (
     <div className="mx-auto p-4 bg-woman bg-cover bg-center min-h-screen">

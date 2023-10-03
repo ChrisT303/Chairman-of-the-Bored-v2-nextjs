@@ -40,6 +40,7 @@ const typeDefs = gql`
     authenticatedUser: User
     getUserPreferences(id: ID!): User
     getTopUsers: [User]
+    completedActivities: [Activity]
     getUserSavedActivities(userId: ID!): [SavedActivity]
   }
 
@@ -47,10 +48,11 @@ const typeDefs = gql`
     registerUser(registerInput: RegisterInput): User
     loginUser(loginInput: LoginInput!): User
     updateUserPreferences(input: UserPreferenceInput!): User
+    markActivityAsCompleted(activityId: ID!): Activity
+    markActivityAsIncomplete(activityId: ID!): Activity
     saveActivity(userId: ID!, activity: ActivityInput!): User
     incrementUserPoints(userId: ID!): User
     deleteActivity(activityId: ID!): User
-
   }
 
   input ActivityInput {
@@ -61,6 +63,7 @@ const typeDefs = gql`
     link: String
     key: String
     accessibility: Float
+    isCompleted: Boolean  
   }
 
   type SavedActivity {
@@ -70,11 +73,14 @@ const typeDefs = gql`
   }
 
   type Activity {
+    id: ID!
     activity: String!
     type: String!
     participants: Int
     price: Float
+    isCompleted: Boolean   
   }
 `;
 
 module.exports = typeDefs;
+

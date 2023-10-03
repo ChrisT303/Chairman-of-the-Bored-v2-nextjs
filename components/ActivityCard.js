@@ -3,7 +3,7 @@ import { formatPrice } from '../server/utils/priceFormatter';
 
 
 const ActivityCard = ({ savedActivity, onDelete, onCompletion }) => {
-  const [isCompleted, setIsCompleted] = useState(false); 
+  const [isCompleted, setIsCompleted] = useState(savedActivity.isCompleted);
   
   const handleCompletion = () => {
     setIsCompleted(true); 

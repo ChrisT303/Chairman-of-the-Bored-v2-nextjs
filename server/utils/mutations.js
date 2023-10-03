@@ -76,6 +76,17 @@ export const INCREMENT_USER_POINTS = gql`
   }
 `;
 
+export const COMPLETE_ACTIVITY = gql`
+  mutation CompleteActivity($activityId: ID!) {
+    markActivityAsCompleted(activityId: $activityId) {
+      id
+      isCompleted
+    }
+  }
+`;
+
+
+
 
 
 

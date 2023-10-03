@@ -42,6 +42,9 @@ const resolvers = {
           },
         }));
       },
+      completedActivities: async () => {
+        return await Activity.find({ isCompleted: true });
+    }, 
     },
 
     async getTopUsers() {
@@ -143,10 +146,11 @@ const resolvers = {
       console.log("saveActivity - User ID:", userId); // Log the incoming user ID
       console.log("saveActivity - Activity:", activity); // Log the incoming activity
       const enrichedActivity = {
+        ...activity,
         title: activity.activity,
         description: `Activity of type ${activity.type} with ${activity.participants} participants and price ${activity.price}`,
-        participants: activity.participants, 
-        price: activity.price,   
+        participants: activity.participants,
+        price: activity.price,
       };
       // Authentication check
       if (!context.user) {
@@ -197,7 +201,7 @@ const resolvers = {
     },
 
     async deleteActivity(_, { activityId }) {
-      console.log('Activity Id:', activityId); 
+      console.log("Activity Id:", activityId);
       const activity = await Activity.findById(activityId);
       if (!activity) {
         throw new Error("Activity not found");
@@ -213,28 +217,29 @@ const resolvers = {
       );
       await user.save();
 
-      user.savedActivities = user.savedActivities.map(activity => activity.toString());
+      user.savedActivities = user.savedActivities.map((activity) =>
+        activity.toString()
+      );
 
-      await user.populate('savedActivities')
+      await user.populate("savedActivities");
 
       // Deleting the activity
       await Activity.findByIdAndDelete(activityId);
       return {
         ...user._doc,
         id: user._id.toString(),
-        savedActivities: user.savedActivities.map(sa => ({
+        savedActivities: user.savedActivities.map((sa) => ({
           ...sa._doc,
           id: sa._id.toString(),
           // Assuming that 'activity' field in 'SavedActivity' contains the fields like 'activity', 'type', 'participants', 'price'
           activity: {
-            activity: sa.activity ? sa.activity.activity : '', 
-            type: sa.activity ? sa.activity.type : '', 
-            participants: sa.activity ? sa.activity.participants : 0, 
-            price: sa.activity ? sa.activity.price : 0, 
+            activity: sa.activity ? sa.activity.activity : "",
+            type: sa.activity ? sa.activity.type : "",
+            participants: sa.activity ? sa.activity.participants : 0,
+            price: sa.activity ? sa.activity.price : 0,
           },
         })),
       };
-    
     },
 
     async incrementUserPoints(_, { userId }) {
@@ -247,6 +252,28 @@ const resolvers = {
       await user.save();
 
       return user;
+    },
+    markActivityAsCompleted: async (_, { activityId }) => {
+      const activity = await Activity.findById(activityId);
+      if (!activity) {
+        throw new Error("Activity not found");
+      }
+
+      activity.isCompleted = true;
+      await activity.save();
+
+      return activity;
+    },
+    markActivityAsIncomplete: async (_, { activityId }) => {
+      const activity = await Activity.findById(activityId);
+      if (!activity) {
+        throw new Error("Activity not found");
+      }
+
+      activity.isCompleted = false;
+      await activity.save();
+
+      return activity;
     },
   },
 };
