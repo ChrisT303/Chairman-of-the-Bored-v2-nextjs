@@ -255,6 +255,23 @@ const resolvers = {
 
       return user;
     },
+    async deductPoints(_, { userId }) {
+      const user = await User.findById(userId);
+      if (!user) {
+        throw new Error("User not found");
+      }
+    
+      // Ensure the user has points before deducting
+      if ((user.points || 0) <= 0) {
+        throw new Error("Insufficient points");
+      }
+    
+      user.points -= 1; 
+      await user.save();
+    
+      return user;
+    },
+    
     markActivityAsCompleted: async (_, { activityId }) => {
       const activity = await Activity.findById(activityId);
       if (!activity) {

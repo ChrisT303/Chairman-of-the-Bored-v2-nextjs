@@ -6,7 +6,8 @@ import {
   UPDATE_USER_PREFERENCES, 
   INCREMENT_USER_POINTS, 
   DELETE_ACTIVITY,
-  COMPLETE_ACTIVITY
+  COMPLETE_ACTIVITY,
+  MARK_ACTIVITY_AS_INCOMPLETE
 } from "../server/utils/mutations";
 
 
@@ -20,6 +21,8 @@ const Profile = () => {
   const [skillLevel, setSkillLevel] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  // const [deductPoints, { loading: deductLoading }] = useMutation(DEDUCT_POINTS);
+
 
   const { user, loading } = useContext(AuthContext);
 
@@ -46,6 +49,11 @@ const Profile = () => {
       ],
     }
   );
+
+  const [markActivityAsIncomplete, { loading: incompleteLoading }] = useMutation(
+    MARK_ACTIVITY_AS_INCOMPLETE
+);
+
   
   
   const [updateUserPreferences, { loading: updateLoading }] = useMutation(
@@ -127,6 +135,18 @@ const Profile = () => {
     }
   };
   
+  const handleMarkAsIncomplete = async (activityId) => {
+    try {
+      await markActivityAsIncomplete({
+        variables: {
+          activityId: activityId
+        }
+      });
+    } catch (error) {
+      console.error("Failed to mark the activity as incomplete:", error);
+    }
+};
+
 
 
 
@@ -191,6 +211,7 @@ const Profile = () => {
           {savedActivitiesData?.getUserSavedActivities?.length ? (
             savedActivitiesData.getUserSavedActivities.map((savedActivity) => (
               <ActivityCard
+                user={user}
                 key={savedActivity.id}
                 savedActivity={savedActivity}
                 onDelete={async (activityId) => {

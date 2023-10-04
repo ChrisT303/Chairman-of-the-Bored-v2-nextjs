@@ -86,6 +86,28 @@ export const COMPLETE_ACTIVITY = gql`
 `;
 
 
+export const MARK_ACTIVITY_AS_INCOMPLETE = gql`
+  mutation MarkActivityAsIncomplete($activityId: ID!) {
+    markActivityAsIncomplete(activityId: $activityId) {
+      id
+      isCompleted
+      
+    }
+  }
+`;
+
+export const DEDUCT_POINTS = gql`
+  mutation DeductPoints($userId: ID!) {
+    deductPoints(userId: $userId) {
+      id
+      points
+    }
+  }
+`;
+
+
+
+
 
 
 

@@ -1,14 +1,50 @@
 import React, {useState} from "react";
-import { formatPrice } from '../server/utils/priceFormatter'; 
+import { formatPrice } from '../server/utils/priceFormatter';
+import { useMutation } from "@apollo/react-hooks";
+import { MARK_ACTIVITY_AS_INCOMPLETE,COMPLETE_ACTIVITY, DEDUCT_POINTS, INCREMENT_USER_POINTS } from "../server/utils/mutations";
 
 
-const ActivityCard = ({ savedActivity, onDelete, onCompletion }) => {
+
+const ActivityCard = ({ savedActivity, onDelete, onCompletion, user }) => {
   const [isCompleted, setIsCompleted] = useState(savedActivity.isCompleted);
+  const [markActivityAsIncomplete, { loading: markingIncomplete }] = useMutation(MARK_ACTIVITY_AS_INCOMPLETE);
+const [markActivityAsComplete, { loading: markingComplete }] = useMutation(COMPLETE_ACTIVITY);
+const [deductPoints, { loading: deducting }] = useMutation(DEDUCT_POINTS);
+const [awardPoints, { loading: awarding }] = useMutation(INCREMENT_USER_POINTS);
+
   
   const handleCompletion = () => {
     setIsCompleted(true); 
     onCompletion(savedActivity.id);
   };
+
+  const handleToggleCompletion = async () => {
+    if (isCompleted) {
+      await markActivityAsIncomplete({
+        variables: {
+          activityId: savedActivity.id,
+        },
+      });
+      await deductPoints({
+        variables: {
+          userId: user.id,
+        },
+      });
+    } else {
+      await markActivityAsComplete({
+        variables: {
+          activityId: savedActivity.id,
+        },
+      });
+      await awardPoints({
+        variables: {
+          userId: user.id,
+        },
+      });
+    }
+    setIsCompleted(!isCompleted); 
+  };
+  
 
   return (
     <div 
@@ -26,12 +62,12 @@ const ActivityCard = ({ savedActivity, onDelete, onCompletion }) => {
       </div>
       <div className="flex flex-col space-y-2">
       <button
-          className={`retro-btn ${isCompleted ? 'bg-gray-400' : 'bg-green-500'} px-4 py-2`}
-          onClick={handleCompletion}
-          disabled={isCompleted}
-        >
-          Complete
-        </button>
+  className={`retro-btn ${isCompleted ? 'bg-gray-400' : 'bg-green-500'} px-4 py-2`}
+  onClick={handleToggleCompletion}
+>
+  {isCompleted ? "Incomplete" : "Complete"}
+</button>
+
         <button
           className="retro-btn bg-red-500 px-4 py-2"
           onClick={() => onDelete(savedActivity.id)}

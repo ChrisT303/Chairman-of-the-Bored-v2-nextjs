@@ -44,6 +44,12 @@ const typeDefs = gql`
     getUserSavedActivities(userId: ID!): [SavedActivity]
   }
 
+  type UserPointsResponse {
+    id: ID!
+    points: Int!
+  }
+  
+
   type Mutation {
     registerUser(registerInput: RegisterInput): User
     loginUser(loginInput: LoginInput!): User
@@ -51,6 +57,7 @@ const typeDefs = gql`
     markActivityAsCompleted(activityId: ID!): Activity
     markActivityAsIncomplete(activityId: ID!): Activity
     saveActivity(userId: ID!, activity: ActivityInput!): User
+    deductPoints(userId: ID!): UserPointsResponse
     incrementUserPoints(userId: ID!): User
     deleteActivity(activityId: ID!): User
   }
