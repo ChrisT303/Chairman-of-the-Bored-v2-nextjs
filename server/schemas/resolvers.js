@@ -151,6 +151,7 @@ const resolvers = {
         description: `Activity of type ${activity.type} with ${activity.participants} participants and price ${activity.price}`,
         participants: activity.participants,
         price: activity.price,
+        isCompleted: false  
       };
       // Authentication check
       if (!context.user) {

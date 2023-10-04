@@ -70,6 +70,7 @@ const typeDefs = gql`
     id: ID!
     userId: ID!
     activity: Activity!
+    isCompleted: Boolean
   }
 
   type Activity {
