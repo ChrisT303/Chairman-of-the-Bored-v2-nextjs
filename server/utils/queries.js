@@ -32,9 +32,11 @@ export const GET_USER_SAVED_ACTIVITIES = gql`
         participants
         price
       }
+      isCompleted
     }
   }
 `;
+
 
 export const GET_TOP_USERS = gql`
   query GetTopUsers {
