@@ -40,6 +40,7 @@ const resolvers = {
             participants: activity.participants || 0,
             price: activity.price,
           },
+          isCompleted: activity.isCompleted 
         }));
       },
       completedActivities: async () => {
