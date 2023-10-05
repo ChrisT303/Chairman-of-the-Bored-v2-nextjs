@@ -5,15 +5,15 @@ import { GET_USER_SAVED_ACTIVITIES } from "../server/utils/queries";
 import { AuthContext } from "../context/authContext";
 import { formatPrice } from '../server/utils/priceFormatter'; 
 
-
 const defaultUserPreferences = {
   interest: ["recreational", "social", "diy"],
-  // ...other default values if you want to add later for default user preferences
 };
 
 const BoredApi = ({ userPreferences = defaultUserPreferences }) => {
   const [activity, setActivity] = useState({});
+  const [showFlashMessage, setShowFlashMessage] = useState(false);
   const { user } = useContext(AuthContext);
+
   const [saveActivity] = useMutation(SAVE_ACTIVITY, {
     refetchQueries: [
       {
@@ -22,18 +22,14 @@ const BoredApi = ({ userPreferences = defaultUserPreferences }) => {
       },
     ],
   });
+
   const SearchApi = async () => {
-    // If userPreferences is undefined, use the defaultUserPreferences
     const preferences = userPreferences || defaultUserPreferences;
-
-    console.log(preferences.interest);
-
     const activities = await Promise.all(
       preferences.interest.map(async (interest) => {
         const apiUrl = `http://www.boredapi.com/api/activity?type=${interest}`;
         const response = await fetch(apiUrl);
         const data = await response.json();
-        console.log(`Response for ${interest}:`, data);
         return data;
       })
     );
@@ -54,38 +50,50 @@ const BoredApi = ({ userPreferences = defaultUserPreferences }) => {
 
   const saveActivityHandler = async (activity) => {
     const userId = user.id;
-  
-    // Ensure activity.participants is a valid number before saving
+
     if (activity.participants === null || activity.participants === undefined) {
       console.error("Invalid participants value in activity");
       return;
     }
-  
-    // Transform activity object to match the format expected by the GraphQL mutation
+
     const transformedActivity = {
       activity: activity.activity,
       type: activity.type,
       participants: activity.participants,
       price: activity.price,
     };
-  
+
     const { data } = await saveActivity({
       variables: {
         userId,
         activity: transformedActivity,
       },
     });
-  
+
     if (data) {
       console.log("Activity saved successfully");
+
+      // Show flash message
+      setShowFlashMessage(true);
+
+      // Hide flash message after 3 seconds
+      setTimeout(() => {
+        setShowFlashMessage(false);
+      }, 3000);
     } else {
       console.log("Failed to save activity");
     }
   };
-  
 
   return (
     <div className="flex flex-col items-center justify-start pt-10 h-screen">
+
+      {showFlashMessage && (
+        <div className="flash-message bg-yellow-500 text-white py-2 px-4 rounded mb-4">
+          Activity Saved! <br />  
+        </div>
+      )}
+
       <div
         className={`bg-white bg-opacity-70 shadow-lg rounded-lg p-6 mb-8 text-center ${
           !activity.activity && "awaiting-adventure"
@@ -100,10 +108,9 @@ const BoredApi = ({ userPreferences = defaultUserPreferences }) => {
           </>
         ) : (
           <>
-          <h2 className="text-2xl font-bold">Awaiting Adventure!</h2>
-          <p>Click &quot;Tell me what to do!&quot; to get started.</p>
-      </>
-      
+            <h2 className="text-2xl font-bold">Awaiting Adventure!</h2>
+            <p>Click &quot;Tell me what to do!&quot; to get started.</p>
+          </>
         )}
       </div>
       <button
@@ -124,6 +131,5 @@ const BoredApi = ({ userPreferences = defaultUserPreferences }) => {
   );
 };
 
-
-
 export default BoredApi;
+
