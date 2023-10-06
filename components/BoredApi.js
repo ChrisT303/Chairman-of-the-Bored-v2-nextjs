@@ -27,7 +27,7 @@ const BoredApi = ({ userPreferences = defaultUserPreferences }) => {
     const preferences = userPreferences || defaultUserPreferences;
     const activities = await Promise.all(
       preferences.interest.map(async (interest) => {
-        const apiUrl = `http://www.boredapi.com/api/activity?type=${interest}`;
+        const apiUrl = `https://www.boredapi.com/api/activity?type=${interest}`;
         const response = await fetch(apiUrl);
         const data = await response.json();
         return data;
