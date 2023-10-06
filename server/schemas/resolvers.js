@@ -1,5 +1,5 @@
 const { User } = require("../models");
-const { SavedActivity: Activity } = require("../models");
+const { Activity } = require("../models");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { AuthenticationError } = require("apollo-server-errors");
