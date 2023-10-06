@@ -142,10 +142,6 @@ const resolvers = {
     },
 
     saveActivity: async (_, { userId, activity }, context, contextValue) => {
-      console.log("saveActivity - ContextValue:", context); // Log the context
-      console.log("saveActivity - Context user:", context.user); // Log the user from context
-      console.log("saveActivity - User ID:", userId); // Log the incoming user ID
-      console.log("saveActivity - Activity:", activity); // Log the incoming activity
       const enrichedActivity = {
         ...activity,
         title: activity.activity,
