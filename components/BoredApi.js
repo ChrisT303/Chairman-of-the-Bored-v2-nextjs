@@ -6,7 +6,7 @@ import { AuthContext } from "../context/authContext";
 import { formatPrice } from '../server/utils/priceFormatter'; 
 
 const defaultUserPreferences = {
-  interest: ["recreational", "social", "recreational", "relaxation", "education", "music", "busywork", "cooking"],
+  interest: ["recreational", "social", "recreational", "relaxation", "education", "music", "busywork", "cooking", "diy"],
 };
 
 const BoredApi = ({ userPreferences = defaultUserPreferences }) => {

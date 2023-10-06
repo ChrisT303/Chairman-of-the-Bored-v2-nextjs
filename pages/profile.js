@@ -35,6 +35,7 @@ const Profile = () => {
     { value: "charity", label: "Charity" },
     { value: "busywork", label: "Busywork" },
     { value: "cooking", label: "Cooking" },
+    { value: "diy", label: "DIY" },
     { value: "relaxation", label: "Relaxation" },
   ];
 
@@ -68,7 +69,6 @@ const Profile = () => {
       setLocation(userData.location || "");
       setSkillLevel(userData.skillLevel || "");
 
-      // Assuming interests in DB is saved as comma-separated strings
       const interestsArray = userData.interest
         .split(",")
         .map((interest) => ({ value: interest, label: interest }));
