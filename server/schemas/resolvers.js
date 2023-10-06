@@ -80,11 +80,9 @@ const resolvers = {
           expiresIn: "2h",
         }
       );
-      console.log(token);
 
       newUser.token = token;
 
-      console.log(newUser);
 
       const res = await newUser.save();
       return {
@@ -115,7 +113,6 @@ const resolvers = {
           token: token, // Include token explicitly
           ...user._doc,
         };
-        console.log(returnObject); // Add this
         return returnObject;
       } else {
         throw new Error("Invalid login credentials", "INVALID_CREDENTIALS");
@@ -198,7 +195,6 @@ const resolvers = {
     },
 
     async deleteActivity(_, { activityId }) {
-      console.log("Activity Id:", activityId);
       const activity = await Activity.findById(activityId);
       if (!activity) {
         throw new Error("Activity not found");
