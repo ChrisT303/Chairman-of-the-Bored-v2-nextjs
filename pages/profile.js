@@ -1,7 +1,10 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import { AuthContext } from "../context/authContext";
-import { GET_USER_SAVED_ACTIVITIES } from "../server/utils/queries";
+import {
+  GET_USER_SAVED_ACTIVITIES,
+  GET_USER_PREFERENCES,
+} from "../server/utils/queries";
 import {
   UPDATE_USER_PREFERENCES,
   INCREMENT_USER_POINTS,
@@ -48,8 +51,30 @@ const Profile = () => {
     }
   );
 
-  const [markActivityAsIncomplete, { loading: incompleteLoading }] =
-    useMutation(MARK_ACTIVITY_AS_INCOMPLETE);
+  const { data: userPreferencesData, loading: preferencesLoading } = useQuery(
+    GET_USER_PREFERENCES,
+    {
+      variables: {
+        id: user?.id,
+      },
+      fetchPolicy: "network-only",
+    }
+  );
+
+  useEffect(() => {
+    if (userPreferencesData) {
+      const userData = userPreferencesData.getUserPreferences;
+      setAge(userData.age || "");
+      setLocation(userData.location || "");
+      setSkillLevel(userData.skillLevel || "");
+
+      // Assuming interests in DB is saved as comma-separated strings
+      const interestsArray = userData.interest
+        .split(",")
+        .map((interest) => ({ value: interest, label: interest }));
+      setInterest(interestsArray);
+    }
+  }, [userPreferencesData]);
 
   const [updateUserPreferences, { loading: updateLoading }] = useMutation(
     UPDATE_USER_PREFERENCES,
@@ -124,18 +149,6 @@ const Profile = () => {
       await awardPoints({ variables: { userId: user?.id } });
     } catch (error) {
       console.error("Failed to complete the activity:", error);
-    }
-  };
-
-  const handleMarkAsIncomplete = async (activityId) => {
-    try {
-      await markActivityAsIncomplete({
-        variables: {
-          activityId: activityId,
-        },
-      });
-    } catch (error) {
-      console.error("Failed to mark the activity as incomplete:", error);
     }
   };
 

@@ -23,28 +23,39 @@ const BoredApi = ({ userPreferences = defaultUserPreferences }) => {
     ],
   });
 
-  const SearchApi = async () => {
-    const getInterests = () => {
-      if(userPreferences && userPreferences.interest) {
-          return userPreferences.interest;
-      }
-      return defaultUserPreferences.interest;
+  function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]]; // Destructuring assignment
+    }
   }
   
-  const interests = getInterests();
-  const activities = await Promise.all(
+
+  const SearchApi = async () => {
+    const getInterests = () => {
+      if (userPreferences && userPreferences.interest) {
+        return userPreferences.interest;
+      }
+      return defaultUserPreferences.interest;
+    };
+
+    const interests = getInterests();
+    shuffleArray(interests);
+
+    const activities = await Promise.all(
       interests.map(async (interest) => {
-          const apiUrl = `https://www.boredapi.com/api/activity?type=${interest}`;
-          const response = await fetch(apiUrl);
-          const data = await response.json();
-          return data;
+        const apiUrl = `https://www.boredapi.com/api/activity?type=${interest}`;
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+        return data;
       })
-  );
-  
+    );
+
 
     const nonEmptyActivities = activities.filter(
       (activity) => activity.activity
     );
+
     if (nonEmptyActivities.length > 0) {
       const randomActivity =
         nonEmptyActivities[
@@ -55,6 +66,8 @@ const BoredApi = ({ userPreferences = defaultUserPreferences }) => {
       console.log("No activities found for the selected interests.");
     }
   };
+
+
 
   const saveActivityHandler = async (activity) => {
     const userId = user.id;
@@ -92,6 +105,9 @@ const BoredApi = ({ userPreferences = defaultUserPreferences }) => {
       console.log("Failed to save activity");
     }
   };
+
+
+
 
   return (
     <div className="flex flex-col items-center justify-start pt-10 h-screen">
