@@ -6,7 +6,7 @@ import { AuthContext } from "../context/authContext";
 import { formatPrice } from '../server/utils/priceFormatter'; 
 
 const defaultUserPreferences = {
-  interest: ["recreational", "social", "diy"],
+  interest: ["recreational", "social", "recreational", "relaxation", "education", "music", "busywork", "cooking"],
 };
 
 const BoredApi = ({ userPreferences = defaultUserPreferences }) => {
@@ -24,15 +24,23 @@ const BoredApi = ({ userPreferences = defaultUserPreferences }) => {
   });
 
   const SearchApi = async () => {
-    const preferences = userPreferences || defaultUserPreferences;
-    const activities = await Promise.all(
-      preferences.interest.map(async (interest) => {
-        const apiUrl = `https://www.boredapi.com/api/activity?type=${interest}`;
-        const response = await fetch(apiUrl);
-        const data = await response.json();
-        return data;
+    const getInterests = () => {
+      if(userPreferences && userPreferences.interest) {
+          return userPreferences.interest;
+      }
+      return defaultUserPreferences.interest;
+  }
+  
+  const interests = getInterests();
+  const activities = await Promise.all(
+      interests.map(async (interest) => {
+          const apiUrl = `https://www.boredapi.com/api/activity?type=${interest}`;
+          const response = await fetch(apiUrl);
+          const data = await response.json();
+          return data;
       })
-    );
+  );
+  
 
     const nonEmptyActivities = activities.filter(
       (activity) => activity.activity
