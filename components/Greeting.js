@@ -4,7 +4,6 @@ import { AuthContext } from "../context/authContext";
 
 const UserGreeting = () => {
   const { user } = useContext(AuthContext);
-  console.log(user);  
   const userName = user?.name;
 
   return (
