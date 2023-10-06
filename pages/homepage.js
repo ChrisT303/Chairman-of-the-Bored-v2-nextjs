@@ -8,7 +8,6 @@ import { GET_USER_PREFERENCES } from '../server/utils/queries';
 
 const HomePage = () => {
   const { user, loading: authLoading } = useContext(AuthContext);
-  console.log("user:", user);
 
   const { loading: queryLoading, error, data } = useQuery(GET_USER_PREFERENCES, {
     variables: { id: user?.id },

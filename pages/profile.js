@@ -94,9 +94,7 @@ const Profile = () => {
     },
     fetchPolicy: "network-only",
   });
-  console.log("Fetching saved activities:", savedActivitiesData);
 
-  console.log("Saved Activities Data:", savedActivitiesData);
 
   const handleSubmit = async (event) => {
     event.preventDefault();

@@ -22,7 +22,6 @@ const httpLink = new HttpLink({
 });
 
 const requestLogger = new ApolloLink((operation, forward) => {
-  console.log("Request:", operation);
 
   // Get token from cookies
   const token = Cookies.get('jwtToken');
