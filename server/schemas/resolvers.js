@@ -22,9 +22,9 @@ const resolvers = {
     getUserPreferences: async (_, { id }) => await User.findById(id),
     getUserSavedActivities: {
       resolve: async (_, { userId }) => {
-        console.log("Received User ID in Resolver:", userId); // Logging user ID for debug
+        console.log("Received User ID in Resolver:", userId); 
         const user = await User.findById(userId).populate("savedActivities");
-        console.log("User Data Fetched from DB:", user); // Logging user data for debug
+        console.log("User Data Fetched from DB:", user); 
 
         if (!user) {
           throw new Error("User not found");
