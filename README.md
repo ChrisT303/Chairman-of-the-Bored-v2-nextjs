@@ -36,6 +36,8 @@ Here are the steps to run the project locally:
 3. Start the development server: **`npm run dev`**
 4. Visit **`http://localhost:3000`** in your browser
 
+## Deployed Link
+[Chairman of the Bored](https://chairman-teal.vercel.app/)
 
 ## Contributing
 Feel free to contribute to Chairman of the Bored. Open an issue or submit a pull request. All contributions are welcome!
