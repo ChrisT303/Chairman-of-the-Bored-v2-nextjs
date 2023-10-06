@@ -26,7 +26,7 @@ const requestLogger = new ApolloLink((operation, forward) => {
 
   // Get token from cookies
   const token = Cookies.get('jwtToken');
-  console.log(`Extracted token: ${token}`);
+  
 
   return forward(operation);
 });

@@ -38,34 +38,24 @@ const BoredApi = ({ userPreferences = defaultUserPreferences }) => {
       }
       return defaultUserPreferences.interest;
     };
-
+  
     const interests = getInterests();
     shuffleArray(interests);
-
-    const activities = await Promise.all(
-      interests.map(async (interest) => {
-        const apiUrl = `https://www.boredapi.com/api/activity?type=${interest}`;
-        const response = await fetch(apiUrl);
-        const data = await response.json();
-        return data;
-      })
-    );
-
-
-    const nonEmptyActivities = activities.filter(
-      (activity) => activity.activity
-    );
-
-    if (nonEmptyActivities.length > 0) {
-      const randomActivity =
-        nonEmptyActivities[
-          Math.floor(Math.random() * nonEmptyActivities.length)
-        ];
-      setActivity(randomActivity);
-    } else {
-      console.log("No activities found for the selected interests.");
+  
+    for (let interest of interests) {
+      const apiUrl = `https://www.boredapi.com/api/activity?type=${interest}`;
+      const response = await fetch(apiUrl);
+      const data = await response.json();
+  
+      if (data && data.activity) { 
+        setActivity(data);
+        return; 
+      }
     }
+  
+    console.log("No activities found for the selected interests.");
   };
+  
 
 
 
