@@ -1,57 +1,51 @@
 # Chairman of the Bored
 
-Chairman of the Bored is a full-stack app that helps users find interesting activities to do when they're feeling bored. The app leverages the Bored API to provide users with a variety of activity options, and allows them to keep track of the activities they've done.
+**Where Boredom Meets Productivity!** Discover exciting activities, create a personalized profile, compete with friends, and much more with Chairman of the Bored.
+
+## Overview 
+Chairman of the Bored leverages the power of the Bored API to provide users with a plethora of engaging activities. It's not just about finding something to do — it's about making every moment count. Join the community and embark on a journey where boredom becomes a thing of the past!
+
+## Features
+- **Discover Activities**: Surf through exciting activities offered by the Bored API.
+- **Personalized Profiles**: Log in and tailor your experience.
+- **Digital Diary**: Keep track of your favorite activities.
+- **Tailored Suggestions**: Set activity preferences to get personalized activity suggestions.
+- **Achievements**: Earn points for completing tasks and activities.
+- **Leaderboard**: Compete with friends and see who tops the chart!
+
 
 ## Tech Stack
 The app is built using the following technologies:
 
-- Next.js
-- Tailwind GraphQL
-- MongoDB
-- Getting Started
+- **Frontend**: Next.js & TailwindCSS
+- **Backend**: GraphQL
+- **Database**: MongoDB with Mongoose
+- **External API**: Bored API
 
-To get started with the app, follow these steps:
+## Future Improvements 
+- Photo upload feature to enhance user profiles.
+- Maps to show you where you could participate in a given activity
+- Google login 
 
-1. Clone the repo to your local machine using the command:
+## Local Development 
 
-`git clone https://github.com/USERNAME/REPO_NAME.git`
-2. Navigate to the project directory:
+Here are the steps to run the project locally:
 
+1. Clone the repository: **`git@github.com:deftonechris/Chairman-of-the-Bored-v2-nextjs.git'**
+2. Install the required dependencies: **`npm install`**
+3. Start the development server: **`npm run dev`**
+4. Visit **`http://localhost:3000`** in your browser
 
-`cd REPO_NAME`
-
-Install the dependencies:
-
-
-`npm install`
-Start the development server:
-
-`npm run dev`
-The app will be available at `http://localhost:3000`.
+## Deployed Link
+[Chairman of the Bored](https://chairman-teal.vercel.app/)
 
 ## Contributing
-We welcome contributions from anyone! If you'd like to contribute to the app, please follow these steps:
-
-1. Fork the repo on GitHub.
-2. Clone your forked repo to your local machine: `git clone https://github.com/YOUR_USERNAME/REPO_NAME.git`
-3. Create a new branch for your feature or bugfix: `git checkout -b my-feature-branch`
-4. Make your changes and commit them: `git add .
-` `git commit -m "Add my feature"`
-5. Push your changes to your forked repo: `git push origin my-feature-branch`
-6. Open a pull request on GitHub and describe your changes.
-
-
-
-
-
-
+Feel free to contribute to Chairman of the Bored. Open an issue or submit a pull request. All contributions are welcome!
 
 
 ## License
 ![The MIT License](https://img.shields.io/badge/license-MIT-green)
 
-## Acknowledgements
-The Chairman of the Bored app was originally created as a group project during University of Denver's Full Stack Web Devlopment Bootcamp. I am going to finish this thing because frankly, it's driving me crazy leaving it unfinshed. 
 
 ## Questions?
 If you have any questions about the app or would like to report a bug, please open an issue on the GitHub repo. Thanks for using Chairman of the Bored!
