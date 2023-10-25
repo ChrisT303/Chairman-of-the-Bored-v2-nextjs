@@ -20,7 +20,7 @@ const UserGreeting = () => {
 const GenericGreeting = (props) => {
   return (
     <div className=" flex justify-center font-black bg-yellow-300/60 text-black text-center">
-      <h1>We know your&apos;e bored! Click the Signup button!</h1>
+      <h1>We know you&apos;re bored! Click the Signup button!</h1>
     </div>
   );
 };
